@@ -1,0 +1,163 @@
+% \usepackage{xparse}
+
+%test
+% \ExplSyntaxOn
+% \NewDocumentCommand {\testBool} {m} {
+%     \int_compare:nTF { #1 = 2 }
+%     {two}
+%     {some other number}
+% }
+% \ExplSyntaxOff
+%allow double superscripts
+\catcode`\^ = 13 \def^#1{\sp{#1}{}}
+% \catcode`\_ = 13 \def_#1{\sb{#1}{}}
+
+% symbols to denote entire equations
+\NewDocumentCommand {\nc} { m } { \mathcal{N}_{#1} }
+\NewDocumentCommand {\ncm} { m } { \mathcal{\mean{N}}_{#1} }
+\NewDocumentCommand {\ncf} { m } { \mathcal{N}_{#1}' }
+% generic vector/tensor
+\NewDocumentCommand{\vv} { m } { \mathbf{#1} }
+\NewDocumentCommand{\xv} {  } { \mathbf{x} }
+\NewDocumentCommand{\yv} {  } { \mathbf{y} }
+% "order of" symbol
+\NewDocumentCommand {\order} { m g } { 
+    \IfNoValueTF{#2}
+    {\textit{O}(#1) }
+    {\textit{O}(#1)^{#2} }
+}
+% evaluate (eg derivative) at position
+\NewDocumentCommand {\atpos} { m m } { \bigg|_{{#1} = {#2}} }
+% transformed (symmetries)
+\NewDocumentCommand {\tra} {m} {#1^*}
+% averaging
+\NewDocumentCommand {\mean} { m } {\mkern 1.5mu\overline{\mkern-1.5mu#1\mkern-1.5mu}\mkern 1.5mu}
+% partial derivatives
+\ExplSyntaxOn
+\NewDocumentCommand {\diff} { m m g } {
+    \IfNoValueTF {#3}
+        { \frac{\partial #1}{\partial #2} }
+        { \int_compare:nTF { #3 = 2 } % second derivatives in Einstein notation
+            { \IfBooleanTF {\EinsteinNotation} % check if option is enabled
+                {\frac{\partial^#3 #1}{\partial #2 \partial #2} }
+                {\frac{\partial^#3 #1}{\partial #2^#3} }
+            } 
+            {{\frac{\partial^#3 #1}{\partial #2 ^#3}}} % higher derivatives, Einstein notation won't make sense in general
+        }
+}
+\ExplSyntaxOff
+\NewDocumentCommand {\um} {g g g g} {
+    \IfNoValueTF{#1}
+        { \mean{U} }
+        {\IfNoValueTF{#2}
+            {\mean{U}_{#1}}
+            { \IfNoValueTF{#3} 
+                {H_{#1 #2}^0}
+                { \IfNoValueTF{#4}
+                    {H_{#1 #2 #3}^0}
+                {H_{#1 #2 #3 #4}^0}
+            }
+        }
+    }
+}
+\NewDocumentCommand {\uf} {g g g g} {
+    \IfNoValueTF{#1}
+        { u }
+        {\IfNoValueTF{#2}
+            {u_{#1}}
+            { \IfNoValueTF{#3} 
+                {R_{#1 #2}^0}
+                { \IfNoValueTF{#4}
+                    {R_{#1 #2 #3}^0}
+                {R_{#1 #2 #3 #4}^0}
+            }
+        }
+    }
+}
+\RenewDocumentCommand {\pm} {} {\mean{P}}
+\NewDocumentCommand {\pf} {} {p}
+% two-point correlations
+\NewDocumentCommand {\umt} {g g g g o o o o} {
+    % \IfNoValueTF{#5}
+    % { % without args
+        \IfNoValueTF{#1}
+            { \mean{U} }
+            {\IfNoValueTF{#2}
+                {\mean{U}_{#1} }
+                { \IfNoValueTF{#3} 
+                    {H_{#1 #2} }
+                    { \IfNoValueTF{#4}
+                        {H_{#1 #2 #3} }
+                    {H_{#1 #2 #3 #4} }
+                }
+            }
+        }
+    % }
+    %with args
+        % {\IfNoValueTF{#1}
+        %     { \mean{U}(\vv{#5}) }
+        %     {\IfNoValueTF{#2}
+        %         {\mean{U}_{#1}(#5) }
+        %         { \IfNoValueTF{#3} 
+        %             {H_{#1 #2}(\vv{#5}, \vv{#6}) }
+        %             { \IfNoValueTF{#4}
+        %                 {H_{#1 #2 #3}(\vv{#5}, \vv{#6}, \vv{#7})}
+        %             {H_{#1 #2 #3 #4}(\vv{#5} \vv{#6} \vv{#7} \vv{#8})}
+        %         }
+        %     }
+        % }
+    % }
+}
+\NewDocumentCommand {\uft} {g g g g o o o o} {
+    % \IfNoValueTF{#5}
+    % { % without args
+        \IfNoValueTF{#1}
+            { u }
+            {\IfNoValueTF{#2}
+                {u_{#1} }
+                { \IfNoValueTF{#3} 
+                    {R_{#1 #2} }
+                    { \IfNoValueTF{#4}
+                        {R_{#1 #2 #3} }
+                    {R_{#1 #2 #3 #4} }
+                }
+            }
+        }
+    % }
+    %with args
+        % {\IfNoValueTF{#1}
+        %     { u(\vv{#5}) }
+        %     {\IfNoValueTF{#2}
+        %         {u_{#1}(#5) }
+        %         { \IfNoValueTF{#3} 
+        %             {R_{#1 #2}(\vv{#5}, \vv{#6}) }
+        %             { \IfNoValueTF{#4}
+        %                 {R_{#1 #2 #3}(\vv{#5}, \vv{#6}, \vv{#7})}
+        %             {R_{#1 #2 #3 #4}(\vv{#5} \vv{#6} \vv{#7} \vv{#8})}
+        %         }
+        %     }
+        % }
+    % }
+}
+\NewDocumentCommand {\puf} { m o o } {
+    \IfNoValueTF{#2}
+        {\mean{pu_{#1}}}
+        {\mean{pu_{#1}(\vv{#2},\vv{#3})}}
+}
+\NewDocumentCommand {\upf} { m o o } {
+    \IfNoValueTF{#2}
+        {\mean{u_{#1}p}}
+        {\mean{u_{#1}p(\vv{#2},\vv{#3})}}
+}
+\NewDocumentCommand {\pum} { m o o } {
+    \IfNoValueTF{#2}
+        {\mean{PU_{#1}}}
+        {\mean{PU_{#1}(\vv{#2},\vv{#3})}}
+}
+\NewDocumentCommand {\upm} { m o o } {
+    \IfNoValueTF{#2}
+        {\mean{U_{#1}P}}
+        {\mean{U_{#1}P(\vv{#2},\vv{#3})}}
+}
+% turbulent viscosity
+\NewDocumentCommand {\nut} {} {\nu_{\text{turb}}}

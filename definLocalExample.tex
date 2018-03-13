@@ -1,0 +1,19 @@
+%%%%
+% This file should be placed directly into the directory of the latex source file 
+% document-specific settings go here
+%%%%
+
+\usepackage{xparse}
+
+%load global configuration
+\NewDocumentCommand{ \LoadGlobalConfiguration } {  } {
+    \IfFileExists{"definGlobal.tex"}
+    { \input{"definGlobal.tex"} } % a file in the current directory takes precedence
+    { \input{"$LatexGlobalConfig"} } 
+}
+\LoadGlobalConfiguration
+
+%set local variables
+\NewDocumentCommand{\EinsteinNotation}{}{\BooleanTrue} % affects derivatives
+% \NewDocumentCommand{\ShortHigherMoments}{}{\BooleanTrue} % abbreviate higher moments - not implemented yet
+% \NewDocumentCommand{\ShowArgsTwoPoint}{}{\BooleanTrue} % show arguments eg in H_ij(x,y) - not implemented yet

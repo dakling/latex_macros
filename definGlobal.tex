@@ -38,7 +38,7 @@
     \IfNoValueTF {#3}
         { \frac{\partial #1}{\partial #2} }
         { \int_compare:nTF { #3 = 2 } % second derivatives in Einstein notation
-            { \IfBooleanTF {\EinsteinNotation} % check if option is enabled
+            { \IfBooleanTF {\EinsteinNotationDiff} % check if option is enabled
                 {\frac{\partial^#3 #1}{\partial #2 \partial #2} }
                 {\frac{\partial^#3 #1}{\partial #2^#3} }
             } 
@@ -46,7 +46,8 @@
         }
 }
 \ExplSyntaxOff
-\NewDocumentCommand {\um} {g g g g} {
+\NewDocumentCommand {\um} {g g g g} {\umShort{#1}{#2}{#3}{#4} }
+\NewDocumentCommand {\umShort} {g g g g} {
     \IfNoValueTF{#1}
         { \mean{U} }
         {\IfNoValueTF{#2}
@@ -60,7 +61,26 @@
         }
     }
 }
+\NewDocumentCommand {\umLong} {g g g g} {
+    \IfNoValueTF{#1}
+        { \umShort }
+        {\IfNoValueTF{#2}
+            {\umShort{#1}}
+            { \IfNoValueTF{#3} 
+                { \mean{ U_{#1} U_{#2} } }
+                { \IfNoValueTF{#4}
+                    {\mean{ U_{#1} U_{#2} U_{#3} }}
+                {\mean{ U_{#1} U_{#2} U_{#3} U_{#4} }}
+            } 
+        }
+    }
+}
 \NewDocumentCommand {\uf} {g g g g} {
+    \IfBooleanTF{\ShortHigherMoments}
+        {\ufShort{#1}{#2}{#3}{#4} }
+        {\ufLong{#1}{#2}{#3}{#4} }
+}
+\NewDocumentCommand {\ufShort} {g g g g} {
     \IfNoValueTF{#1}
         { u }
         {\IfNoValueTF{#2}
@@ -74,16 +94,29 @@
         }
     }
 }
+\NewDocumentCommand {\ufLong} {g g g g} {
+    \IfNoValueTF{#1}
+        { \ufShort }
+        {\IfNoValueTF{#2}
+            {\ufShort{#1}}
+            { \IfNoValueTF{#3} 
+                { \mean{ u_{#1} u_{#2} } }
+                { \IfNoValueTF{#4}
+                    {\mean{ u_{#1} u_{#2} u_{#3} }}
+                {\mean{ u_{#1} u_{#2} u_{#3} u_{#4} }}
+            } 
+        }
+    }
+}
 \RenewDocumentCommand {\pm} {} {\mean{P}}
 \NewDocumentCommand {\pf} {} {p}
 % two-point correlations
-\NewDocumentCommand {\umt} {g g g g o o o o} {
-    % \IfNoValueTF{#5}
-    % { % without args
-        \IfNoValueTF{#1}
-            { \mean{U} }
+% instantaneous approach
+\NewDocumentCommand {\umtWithoutArgsShort} {g g g g} {
+    \IfNoValueTF{#1}
+            { \um }
             {\IfNoValueTF{#2}
-                {\mean{U}_{#1} }
+                {\um{#1} }
                 { \IfNoValueTF{#3} 
                     {H_{#1 #2} }
                     { \IfNoValueTF{#4}
@@ -92,29 +125,76 @@
                 }
             }
         }
-    % }
-    %with args
-        % {\IfNoValueTF{#1}
-        %     { \mean{U}(\vv{#5}) }
-        %     {\IfNoValueTF{#2}
-        %         {\mean{U}_{#1}(#5) }
-        %         { \IfNoValueTF{#3} 
-        %             {H_{#1 #2}(\vv{#5}, \vv{#6}) }
-        %             { \IfNoValueTF{#4}
-        %                 {H_{#1 #2 #3}(\vv{#5}, \vv{#6}, \vv{#7})}
-        %             {H_{#1 #2 #3 #4}(\vv{#5} \vv{#6} \vv{#7} \vv{#8})}
-        %         }
-        %     }
-        % }
-    % }
-}
-\NewDocumentCommand {\uft} {g g g g o o o o} {
-    % \IfNoValueTF{#5}
-    % { % without args
+     }
+\NewDocumentCommand {\umtWithArgsShort} {g g g g o o o o} {
         \IfNoValueTF{#1}
-            { u }
+            { \um(\vv{#5}) }
             {\IfNoValueTF{#2}
-                {u_{#1} }
+                {\um{#1}(\vv{#5}) }
+                { \IfNoValueTF{#3} 
+                    {H_{#1 #2}(\vv{#5},\vv{#6}) }
+                    { \IfNoValueTF{#4}
+                        {H_{#1 #2 #3}(\vv{#5}, \vv{#6}, \vv{#7}) }
+                        {H_{#1 #2 #3 #4}(\vv{#5}, \vv{#6}, \vv{#7}, \vv{#8}) }
+                }
+            }
+        }
+ }
+\NewDocumentCommand {\umtShort} {g g g g o o o o} { 
+    \IfNoValueTF{#5}
+    { \umtWithoutArgsShort{#1}{#2}{#3}{#4} }
+    { \IfBooleanTF{\ShowArgsTwoPoint}
+        { \umtWithArgsShort{#1}{#2}{#3}{#4}[#5][#6][#7][#8] }
+        { \umtWithoutArgsShort{#1}{#2}{#3}{#4} }
+    }
+}
+\NewDocumentCommand {\umtWithoutArgsLong} {g g g g} {
+    \IfNoValueTF{#1}
+            { \um }
+            {\IfNoValueTF{#2}
+                {\um{#1} }
+                { \IfNoValueTF{#3} 
+                    { \mean{ U_{#1} U_{#2} } }
+                    { \IfNoValueTF{#4}
+                        { \mean{U_{#1} U_{#2} U_{#3}} }
+                        { \mean{U_{#1} U_{#2} U_{#3} U_{#4}} }
+                }
+            }
+        }
+     }
+\NewDocumentCommand {\umtWithArgsLong} {g g g g o o o o} {
+        \IfNoValueTF{#1}
+            { \um(\vv{#5}) }
+            {\IfNoValueTF{#2}
+                {\um{#1}(\vv{#5}) }
+                { \IfNoValueTF{#3} 
+                    { \mean{ U_{#1}(\vv{#5}) U_{#2}(\vv{#6})} }
+                    { \IfNoValueTF{#4}
+                        { \mean{ U_{#1}(\vv{#5}) U_{#2}(\vv{#6}) U_{#3}(\vv{#7})} }
+                        { \mean{ U_{#1}(\vv{#5}) U_{#2}(\vv{#6}) U_{#3}(\vv{#7}) U_{#4}(\vv{#8})} }
+                }
+            }
+        }
+ }
+\NewDocumentCommand {\umtLong} {g g g g o o o o} { 
+    \IfNoValueTF{#5}
+    { \umtWithoutArgsLong{#1}{#2}{#3}{#4} }
+    { \IfBooleanTF{\ShowArgsTwoPoint}
+        { \umtWithArgsLong{#1}{#2}{#3}{#4}[#5][#6][#7][#8] }
+        { \umtWithoutArgsLong{#1}{#2}{#3}{#4} }
+    }
+}
+ \NewDocumentCommand {\umt} {g g g g o o o o} { 
+     \IfBooleanTF{\ShortHigherMoments}
+     {\umtShort{#1}{#2}{#3}{#4}[#5][#6][#7][#8]}
+     {\umtLong{#1}{#2}{#3}{#4}[#5][#6][#7][#8]}
+ }
+% fluctuation approach
+\NewDocumentCommand {\uftWithoutArgsShort} {g g g g} {
+    \IfNoValueTF{#1}
+            { \uf }
+            {\IfNoValueTF{#2}
+                {\uf{#1} }
                 { \IfNoValueTF{#3} 
                     {R_{#1 #2} }
                     { \IfNoValueTF{#4}
@@ -123,22 +203,70 @@
                 }
             }
         }
-    % }
-    %with args
-        % {\IfNoValueTF{#1}
-        %     { u(\vv{#5}) }
-        %     {\IfNoValueTF{#2}
-        %         {u_{#1}(#5) }
-        %         { \IfNoValueTF{#3} 
-        %             {R_{#1 #2}(\vv{#5}, \vv{#6}) }
-        %             { \IfNoValueTF{#4}
-        %                 {R_{#1 #2 #3}(\vv{#5}, \vv{#6}, \vv{#7})}
-        %             {R_{#1 #2 #3 #4}(\vv{#5} \vv{#6} \vv{#7} \vv{#8})}
-        %         }
-        %     }
-        % }
-    % }
+     }
+\NewDocumentCommand {\uftWithArgsShort} {g g g g o o o o} {
+        \IfNoValueTF{#1}
+            { \uf(\vv{#5}) }
+            {\IfNoValueTF{#2}
+                {\uf{#1}(\vv{#5}) }
+                { \IfNoValueTF{#3} 
+                    {R_{#1 #2}(\vv{#5},\vv{#6}) }
+                    { \IfNoValueTF{#4}
+                        {R_{#1 #2 #3}(\vv{#5}, \vv{#6}, \vv{#7}) }
+                        {R_{#1 #2 #3 #4}(\vv{#5}, \vv{#6}, \vv{#7}, \vv{#8}) }
+                }
+            }
+        }
+ }
+\NewDocumentCommand {\uftShort} {g g g g o o o o} { 
+    \IfNoValueTF{#5}
+    { \uftWithoutArgsShort{#1}{#2}{#3}{#4} }
+    { \IfBooleanTF{\ShowArgsTwoPoint}
+        { \uftWithArgsShort{#1}{#2}{#3}{#4}[#5][#6][#7][#8] }
+        { \uftWithoutArgsShort{#1}{#2}{#3}{#4} }
+    }
 }
+\NewDocumentCommand {\uftWithoutArgsLong} {g g g g} {
+    \IfNoValueTF{#1}
+            { \uf }
+            {\IfNoValueTF{#2}
+                {\uf{#1} }
+                { \IfNoValueTF{#3} 
+                    { \mean{ u_{#1} u_{#2} } }
+                    { \IfNoValueTF{#4}
+                        { \mean{U_{#1} u_{#2} u_{#3}} }
+                        { \mean{U_{#1} u_{#2} u_{#3} u_{#4}} }
+                }
+            }
+        }
+     }
+\NewDocumentCommand {\uftWithArgsLong} {g g g g o o o o} {
+        \IfNoValueTF{#1}
+            { \uf(\vv{#5}) }
+            {\IfNoValueTF{#2}
+                {\uf{#1}(\vv{#5}) }
+                { \IfNoValueTF{#3} 
+                    { \mean{ u_{#1}(\vv{#5}) u_{#2}(\vv{#6})} }
+                    { \IfNoValueTF{#4}
+                        { \mean{ u_{#1}(\vv{#5}) u_{#2}(\vv{#6}) u_{#3}(\vv{#7})} }
+                        { \mean{ u_{#1}(\vv{#5}) u_{#2}(\vv{#6}) u_{#3}(\vv{#7}) u_{#4}(\vv{#8})} }
+                }
+            }
+        }
+ }
+\NewDocumentCommand {\uftLong} {g g g g o o o o} { 
+    \IfNoValueTF{#5}
+    { \uftWithoutArgsLong{#1}{#2}{#3}{#4} }
+    { \IfBooleanTF{\ShowArgsTwoPoint}
+        { \uftWithArgsLong{#1}{#2}{#3}{#4}[#5][#6][#7][#8] }
+        { \uftWithoutArgsLong{#1}{#2}{#3}{#4} }
+    }
+}
+ \NewDocumentCommand {\uft} {g g g g o o o o} { 
+     \IfBooleanTF{\ShortHigherMoments}
+     {\uftShort{#1}{#2}{#3}{#4}[#5][#6][#7][#8]}
+     {\uftLong{#1}{#2}{#3}{#4}[#5][#6][#7][#8]}
+ }
 \NewDocumentCommand {\puf} { m o o } {
     \IfNoValueTF{#2}
         {\mean{pu_{#1}}}

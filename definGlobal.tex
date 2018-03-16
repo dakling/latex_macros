@@ -1,17 +1,21 @@
 % \usepackage{xparse}
 
-%test
-% \ExplSyntaxOn
-% \NewDocumentCommand {\testBool} {m} {
-%     \int_compare:nTF { #1 = 2 }
-%     {two}
-%     {some other number}
-% }
-% \ExplSyntaxOff
+% Default settings for all available options
+\ProvideDocumentCommand{\EinsteinNotationDiff}{}{\BooleanTrue} % affects second derivatives
+\ProvideDocumentCommand{\ShortHigherMoments}{}{\BooleanTrue} % abbreviate higher one-point velocity moments
+\ProvideDocumentCommand{\ShowArgsTwoPoint}{}{\BooleanFalse} % show arguments eg in H_ij(x,y) 
+\ProvideDocumentCommand{\diff}{m m g}{\diffPartial{#1}{#2}{#3}} % most frequently used type of derivative
+
+%% general settings
 %allow double superscripts
 \catcode`\^ = 13 \def^#1{\sp{#1}{}}
 % \catcode`\_ = 13 \def_#1{\sb{#1}{}}
 
+%% low-level macros
+% definition of a good looking bar
+\NewDocumentCommand {\overbar} { m } {\mkern 1.5mu\overline{\mkern-1.5mu#1\mkern-1.5mu}\mkern 1.5mu}
+
+%% semantic macros
 % symbols to denote entire equations
 \NewDocumentCommand {\nc} { m } { \mathcal{N}_{#1} }
 \NewDocumentCommand {\ncm} { m } { \mathcal{\mean{N}}_{#1} }
@@ -30,22 +34,27 @@
 \NewDocumentCommand {\atpos} { m m } { \bigg|_{{#1} = {#2}} }
 % transformed (symmetries)
 \NewDocumentCommand {\tra} {m} {#1^*}
+% representation of similarity variables
+\NewDocumentCommand {\simvar} {m} {\tilde{#1}}
 % averaging
-\NewDocumentCommand {\mean} { m } {\mkern 1.5mu\overline{\mkern-1.5mu#1\mkern-1.5mu}\mkern 1.5mu}
-% partial derivatives
+\NewDocumentCommand {\mean} { m } {\overbar{#1}}
+% derivatives
 \ExplSyntaxOn
-\NewDocumentCommand {\diff} { m m g } {
-    \IfNoValueTF {#3}
-        { \frac{\partial #1}{\partial #2} }
-        { \int_compare:nTF { #3 = 2 } % second derivatives in Einstein notation
+\NewDocumentCommand {\diffGeneric} { m m m g } {
+    \IfNoValueTF {#4}
+        { \frac{#3 #1}{#3 #2} }
+        { \int_compare:nTF { #4 = 2 } % second derivatives in Einstein notation
             { \IfBooleanTF {\EinsteinNotationDiff} % check if option is enabled
-                {\frac{\partial^#3 #1}{\partial #2 \partial #2} }
-                {\frac{\partial^#3 #1}{\partial #2^#3} }
+                {\frac{#3^#4 #1}{#3 #2 #3 #2} }
+                {\frac{#3^#4 #1}{#3 #2^#4} }
             } 
-            {{\frac{\partial^#3 #1}{\partial #2 ^#3}}} % higher derivatives, Einstein notation won't make sense in general
+            {{\frac{d #1}{d #2 ^#3}}} % higher derivatives, Einstein notation won't make sense in general
         }
 }
 \ExplSyntaxOff
+\NewDocumentCommand {\diffNormal} { m m g } { \diffGeneric{#1}{#2}{d}{#3} }
+\NewDocumentCommand {\diffPartial} { m m g } { \diffGeneric{#1}{#2}{\partial}{#3} }
+\NewDocumentCommand {\diffTotal} { m m g } { \diffGeneric{#1}{#2}{D}{#3} }
 \NewDocumentCommand {\um} {g g g g} {\umShort{#1}{#2}{#3}{#4} }
 \NewDocumentCommand {\umShort} {g g g g} {
     \IfNoValueTF{#1}
@@ -289,3 +298,9 @@
 }
 % turbulent viscosity
 \NewDocumentCommand {\nut} {} {\nu_{\text{turb}}}
+% artificial velocity 
+\NewDocumentCommand {\ua} { g } { 
+    \IfNoValueTF{#1}
+        {\theta} 
+        {\theta_{#1}} 
+} 

@@ -24,6 +24,9 @@
 \NewDocumentCommand{\vv} { m } { \mathbf{#1} }
 \NewDocumentCommand{\xv} {  } { \mathbf{x} }
 \NewDocumentCommand{\yv} {  } { \mathbf{y} }
+\NewDocumentCommand{\te} { m } { \mathbf{#1} }
+\NewDocumentCommand{\xt} {  } { \mathbf{x} }
+\NewDocumentCommand{\yt} {  } { \mathbf{y} }
 % "order of" symbol
 \NewDocumentCommand {\order} { m g } { 
     \IfNoValueTF{#2}
@@ -119,6 +122,28 @@
 }
 \RenewDocumentCommand {\pm} {} {\mean{P}}
 \NewDocumentCommand {\pf} {} {p}
+\ExplSyntaxOn
+\NewDocumentCommand {\umTensor} { m } { 
+    \int_compare:nTF { #1 = 1 } % 
+    { \vv{\um} }
+    { \vv{H^0} }
+}
+\NewDocumentCommand {\ufTensor} { m } { 
+    \int_compare:nTF { #1 = 1 } % 
+    { \vv{\uf} }
+    { \vv{R^0} }
+}
+\NewDocumentCommand {\umTensorTwoPt} { m } { 
+    \int_compare:nTF { #1 = 1 } % 
+    { \vv{\um} }
+    { \vv{H} }
+}
+\NewDocumentCommand {\ufTensorTwoPt} { m } { 
+    \int_compare:nTF { #1 = 1 } % 
+    { \vv{\uf} }
+    { \vv{R} }
+}
+\ExplSyntaxOff
 % two-point correlations
 % instantaneous approach
 \NewDocumentCommand {\umtWithoutArgsShort} {g g g g} {
@@ -297,10 +322,13 @@
         {\mean{U_{#1}P(\vv{#2},\vv{#3})}}
 }
 % turbulent viscosity
-\NewDocumentCommand {\nut} {} {\nu_{\text{turb}}}
+% \NewDocumentCommand {\nut} {} {\nu_{\text{turb}}}
+\NewDocumentCommand {\nut} {} {\nu_{t}}
 % artificial velocity 
 \NewDocumentCommand {\ua} { g } { 
     \IfNoValueTF{#1}
         {\theta} 
         {\theta_{#1}} 
 } 
+% k- eps - model
+\NewDocumentCommand {\kepsmodel} {} {\(k\)-\(\varepsilon\)-model}

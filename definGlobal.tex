@@ -1,10 +1,10 @@
 % \usepackage{xparse}
 
 % Default settings for all available options
-\ProvideDocumentCommand{\EinsteinNotationDiff}{}{\BooleanTrue} % affects second derivatives
-\ProvideDocumentCommand{\ShortHigherMoments}{}{\BooleanTrue} % abbreviate higher one-point velocity moments
-\ProvideDocumentCommand{\ShowArgsTwoPoint}{}{\BooleanFalse} % show arguments eg in H_ij(x,y) 
-\ProvideDocumentCommand{\diff}{m m g}{\diffPartial{#1}{#2}{#3}} % most frequently used type of derivative
+% \ProvideDocumentCommand{\EinsteinNotationDiff}{}{\BooleanTrue} % affects second derivatives
+% \ProvideDocumentCommand{\ShortHigherMoments}{}{\BooleanTrue} % abbreviate higher one-point velocity moments
+% \ProvideDocumentCommand{\ShowArgsTwoPoint}{}{\BooleanFalse} % show arguments eg in H_ij(x,y) 
+% \ProvideDocumentCommand{\diff}{m m g}{\diffPartial{#1}{#2}{#3}} % most frequently used type of derivative
 
 %% general settings
 %allow double superscripts
@@ -329,6 +329,11 @@
     \IfNoValueTF{#1}
         {\theta} 
         {\theta_{#1}} 
+} 
+\ProvideDocumentCommand {\ualpha} { g } { 
+    \IfNoValueTF{#1}
+        {v} 
+        {v_{#1}} 
 } 
 % k- eps - model
 \NewDocumentCommand {\kepsmodel} {} {\(k\)-\(\varepsilon\)-model}

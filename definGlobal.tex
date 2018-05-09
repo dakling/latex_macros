@@ -344,3 +344,35 @@
 } 
 % k- eps - model
 \NewDocumentCommand {\kepsmodel} {} {\(k\)-\(\varepsilon\)-model}
+%Symmetry generators
+\NewDocumentCommand {\infGenT} {} {X_t}
+\NewDocumentCommand {\infGenX} {} {X_{x_i}}
+\NewDocumentCommand {\infGenGal} {} {X_{\text{Gal}_i}}
+\NewDocumentCommand {\infGenRot} {} {X_{\text{rot}_{\alpha}}}
+\NewDocumentCommand {\infGenP} {} {X_P}
+\NewDocumentCommand {\infGenScI} {} {X_{\text{Sc},1}}
+\NewDocumentCommand {\infGenScII} {} {X_{\text{Sc},2}}
+\NewDocumentCommand {\infGenScNs} {} {X_{\text{Sc,ns}}}
+\NewDocumentCommand {\infGenScStat} {} {X_{\text{Sc,stat}}}
+\NewDocumentCommand {\infGenTransStat} {} {X_{\text{Tr,stat}}}
+\NewDocumentCommand {\infGenTransStatI} { o } {%
+    \IfNoValueTF{#1}
+        {X_{\text{Tr,stat},1}}
+        {X_{\text{Tr,stat},1, #1 }}}
+\NewDocumentCommand {\infGenTransStatII} { o } {%
+    \IfNoValueTF{#1}
+        {X_{\text{Tr,stat},2}}
+        {X_{\text{Tr,stat},2, #1 }}}
+%Global form
+\NewDocumentCommand {\gloSymmT} {} {\infGenT}
+\NewDocumentCommand {\gloSymmX} {} {\infGenX}
+\NewDocumentCommand {\gloSymmGal} {} {\infGenGal}
+\NewDocumentCommand {\gloSymmRot} {} {\infGenRot}
+\NewDocumentCommand {\gloSymmP} {} {\infGenP}
+\NewDocumentCommand {\gloSymmScI} {} {\infGenScI}
+\NewDocumentCommand {\gloSymmScII} {} {\infGenScII}
+\NewDocumentCommand {\gloSymmScNs} {} {\infGenScNs}
+\NewDocumentCommand {\gloSymmScStat} {} {\infGenScStat}
+\NewDocumentCommand {\gloSymmTransStat} {} {\infGenTransStat}
+\NewDocumentCommand {\gloSymmTransStatI} {} {\infGenTransStatI}
+\NewDocumentCommand {\gloSymmTransStatII} {} {\infGenTransStatII}

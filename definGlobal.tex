@@ -1,5 +1,4 @@
 % \usepackage{xparse}
-\usepackage{calc}
 
 % Default settings for all available options
 % \ProvideDocumentCommand{\EinsteinNotationDiff}{}{\BooleanTrue} % affects second derivatives
@@ -22,7 +21,7 @@
 \NewDocumentCommand {\ncm} { m } { \mathcal{\mean{N}}_{#1} }
 \NewDocumentCommand {\ncf} { m } { \mathcal{N}_{#1}' }
 % generic vector/tensor
-\NewDocumentCommand{\vv} { m } { \mathit{#1} }
+\NewDocumentCommand{\vv} { m } { \mathbf{#1} }
 \NewDocumentCommand{\xv} {  } { \vv{x} }
 \NewDocumentCommand{\yv} {  } { \vv{y} }
 \NewDocumentCommand{\te} { m } { \mathbf{#1} }
@@ -356,6 +355,8 @@
 } 
 % k- eps - model
 \NewDocumentCommand {\kepsmodel} {} {\(k\)-\(\varepsilon\)-model}
+% k- omega - model
+\NewDocumentCommand {\komegamodel} {} {\(k\)-\(\omega\)-model}
 %Symmetry generators
 \NewDocumentCommand {\infGenT} {} {X_t}
 \NewDocumentCommand {\infGenX} {} {X_{x_i}}
@@ -366,7 +367,7 @@
 \NewDocumentCommand {\infGenScII} {} {X_{\text{Sc},2}}
 \NewDocumentCommand {\infGenScNs} {} {X_{\text{Sc,ns}}}
 \NewDocumentCommand {\infGenScStat} {} {X_{\text{Sc,stat}}}
-\NewDocumentCommand {\infGenTransStat} {} {X_{\text{Tr,stat}}}
+\NewDocumentCommand {\infGenTransStat} { m } {X_{\text{Tr,stat,#1}}}
 \NewDocumentCommand {\infGenTransStatI} { o } {%
     \IfNoValueTF{#1}
         {X_{\text{Tr,stat},1}}

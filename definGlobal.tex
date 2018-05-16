@@ -159,11 +159,12 @@
 \ExplSyntaxOff
 % two-point correlations
 % instantaneous approach
-\NewDocumentCommand {\umtWithoutArgsShort} {g g g g} {
+\NewDocumentCommand {\umtWithoutArgsShort} {g g g g o o o o} {
     \IfNoValueTF{#1}
             { \um }
             {\IfNoValueTF{#2}
-                {\um{#1} }
+                % {\um{#1} }
+                {\um{#1}(\vv{#5}) }% always show argument for single variable
                 { \IfNoValueTF{#3} 
                     {H_{#1 #2} }
                     { \IfNoValueTF{#4}
@@ -189,17 +190,18 @@
  }
 \NewDocumentCommand {\umtShort} {g g g g o o o o} { 
     \IfNoValueTF{#5}
-    { \umtWithoutArgsShort{#1}{#2}{#3}{#4} }
+    { \umtWithoutArgsShort{#1}{#2}{#3}{#4}[#5][#6][#7][#8] }
     { \IfBooleanTF{\ShowArgsTwoPoint}
         { \umtWithArgsShort{#1}{#2}{#3}{#4}[#5][#6][#7][#8] }
-        { \umtWithoutArgsShort{#1}{#2}{#3}{#4} }
+        { \umtWithoutArgsShort{#1}{#2}{#3}{#4}[#5][#6][#7][#8] }
     }
 }
-\NewDocumentCommand {\umtWithoutArgsLong} {g g g g} {
+\NewDocumentCommand {\umtWithoutArgsLong} {g g g g o o o o} {
     \IfNoValueTF{#1}
             { \um }
             {\IfNoValueTF{#2}
                 {\um{#1} }
+                {\um{#1}(\vv{#5}) }% always show argument for single variable
                 { \IfNoValueTF{#3} 
                     { \mean{ U_{#1} U_{#2} } }
                     { \IfNoValueTF{#4}
@@ -225,10 +227,10 @@
  }
 \NewDocumentCommand {\umtLong} {g g g g o o o o} { 
     \IfNoValueTF{#5}
-    { \umtWithoutArgsLong{#1}{#2}{#3}{#4} }
+    { \umtWithoutArgsLong{#1}{#2}{#3}{#4}[#5][#6][#7][#8] }
     { \IfBooleanTF{\ShowArgsTwoPoint}
         { \umtWithArgsLong{#1}{#2}{#3}{#4}[#5][#6][#7][#8] }
-        { \umtWithoutArgsLong{#1}{#2}{#3}{#4} }
+        { \umtWithoutArgsLong{#1}{#2}{#3}{#4}[#5][#6][#7][#8] }
     }
 }
  \NewDocumentCommand {\umt} {g g g g o o o o} { 
@@ -317,22 +319,26 @@
 \NewDocumentCommand {\puf} { m o o } {
     \IfNoValueTF{#2}
         {\mean{pu_{#1}}}
-        {\mean{pu_{#1}}(\vv{#2},\vv{#3})}
+        {\mean{pu_{#1}}}
+        % {\mean{pu_{#1}}(\vv{#2},\vv{#3})}
 }
 \NewDocumentCommand {\upf} { m o o } {
     \IfNoValueTF{#2}
         {\mean{u_{#1}p}}
-        {\mean{u_{#1}p}(\vv{#2},\vv{#3})}
+        {\mean{u_{#1}p}}
+        % {\mean{u_{#1}p}(\vv{#2},\vv{#3})}
 }
 \NewDocumentCommand {\pum} { m o o } {
     \IfNoValueTF{#2}
         {\mean{PU_{#1}}}
-        {\mean{PU_{#1}}(\vv{#2},\vv{#3})}
+        {\mean{PU_{#1}}}
+        % {\mean{PU_{#1}}(\vv{#2},\vv{#3})}
 }
 \NewDocumentCommand {\upm} { m o o } {
     \IfNoValueTF{#2}
         {\mean{U_{#1}P}}
-        {\mean{U_{#1}P}(\vv{#2},\vv{#3})}
+        {\mean{U_{#1}P}}
+        % {\mean{U_{#1}P}(\vv{#2},\vv{#3})}
 }
 % turbulent viscosity
 % \NewDocumentCommand {\nut} {} {\nu_{\text{turb}}}

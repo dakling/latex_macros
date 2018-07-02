@@ -364,6 +364,7 @@
         {\theta} 
         {\theta_{#1}} 
 } 
+\NewDocumentCommand {\pa} { g } { \psi }
 \ProvideDocumentCommand {\ualpha} { g } { 
     \IfNoValueTF{#1}
         {v} 
@@ -374,15 +375,19 @@
 % k- omega - model
 \NewDocumentCommand {\komegamodel} {} {\mbox{\(k\)-\(\omega\)-model}}
 %Symmetry generators
-\NewDocumentCommand {\infGenT} {} {X_t}
-\NewDocumentCommand {\infGenX} {} {X_{x_i}}
-\NewDocumentCommand {\infGenGal} {} {X_{\text{Gal}_i}}
-\NewDocumentCommand {\infGenRot} {} {X_{\text{rot}_{\alpha}}}
-\NewDocumentCommand {\infGenP} {} {X_P}
-\NewDocumentCommand {\infGenScI} {} {X_{\text{Sc},1}}
-\NewDocumentCommand {\infGenScII} {} {X_{\text{Sc},2}}
-\NewDocumentCommand {\infGenScNs} {} {X_{\text{Sc,ns}}}
-\NewDocumentCommand {\infGenScStat} {} {X_{\text{Sc,stat}}}
+\NewDocumentCommand {\infGen} { g } {
+    \IfNoValueTF{#1} {X}
+        {X_{#1}}
+    }
+    \NewDocumentCommand {\infGenT} {} {\infGen{t}}
+\NewDocumentCommand {\infGenX} {} {\infGen{x_i}}
+\NewDocumentCommand {\infGenGal} {} {X_{\infGen{\text{Gal}_i}}}
+\NewDocumentCommand {\infGenRot} {} {\infGen{\text{rot}_{\alpha}}}
+\NewDocumentCommand {\infGenP} {} {\infGen{P}}
+\NewDocumentCommand {\infGenScI} {} {\infGen{\text{Sc},1}}
+\NewDocumentCommand {\infGenScII} {} {\infGen{\text{Sc},2}}
+\NewDocumentCommand {\infGenScNs} {} {\infGen{\text{Sc,ns}}}
+\NewDocumentCommand {\infGenScStat} {} {\infGen{\text{Sc,stat}}}
 \NewDocumentCommand {\infGenTransStat} { m } {X_{\text{Tr,stat,#1}}}
 \NewDocumentCommand {\infGenTransStatI} { o } {%
     \IfNoValueTF{#1}
@@ -393,17 +398,27 @@
         {X_{\text{Tr,stat},2}}
         {X_{\text{Tr,stat},2, #1 }}}
 %Global form
-\NewDocumentCommand {\gloSymmT} {} {\infGenT}
-\NewDocumentCommand {\gloSymmX} {} {\infGenX}
-\NewDocumentCommand {\gloSymmGal} {} {\infGenGal}
-\NewDocumentCommand {\gloSymmRot} {} {\infGenRot}
-\NewDocumentCommand {\gloSymmP} {} {\infGenP}
-\NewDocumentCommand {\gloSymmScI} {} {\infGenScI}
-\NewDocumentCommand {\gloSymmScII} {} {\infGenScII}
-\NewDocumentCommand {\gloSymmScNs} {} {\infGenScNs}
-\NewDocumentCommand {\gloSymmScStat} {} {\infGenScStat}
-\NewDocumentCommand {\gloSymmTransStat} {} {\infGenTransStat}
-\NewDocumentCommand {\gloSymmTransStatI} {} {\infGenTransStatI}
-\NewDocumentCommand {\gloSymmTransStatII} {} {\infGenTransStatII}
+\NewDocumentCommand {\gloSymm} { g } {
+    \IfNoValueTF{#1} {T}
+        {T_{#1}}
+}
+\NewDocumentCommand {\gloSymmT} {} {\gloSymm{t}}
+\NewDocumentCommand {\gloSymmX} {} {\gloSymm{x_i}}
+\NewDocumentCommand {\gloSymmGal} {} {X_{\gloSymm{\text{Gal}_i}}}
+\NewDocumentCommand {\gloSymmRot} {} {\gloSymm{\text{rot}_{\alpha}}}
+\NewDocumentCommand {\gloSymmP} {} {\gloSymm{P}}
+\NewDocumentCommand {\gloSymmScI} {} {\gloSymm{\text{Sc},1}}
+\NewDocumentCommand {\gloSymmScII} {} {\gloSymm{\text{Sc},2}}
+\NewDocumentCommand {\gloSymmScNs} {} {\gloSymm{\text{Sc,ns}}}
+\NewDocumentCommand {\gloSymmScStat} {} {\gloSymm{\text{Sc,stat}}}
+\NewDocumentCommand {\gloSymmTransStat} { m } {X_{\text{Tr,stat,#1}}}
+\NewDocumentCommand {\gloSymmTransStatI} { o } {%
+    \IfNoValueTF{#1}
+        {T_{\text{Tr,stat},1}}
+        {T_{\text{Tr,stat},1, #1 }}}
+\NewDocumentCommand {\gloSymmTransStatII} { o } {%
+    \IfNoValueTF{#1}
+        {T_{\text{Tr,stat},2}}
+        {T_{\text{Tr,stat},2, #1 }}}
 
 \NewDocumentCommand {\lagX} { m } {\xi_{#1}}

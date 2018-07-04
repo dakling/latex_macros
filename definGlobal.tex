@@ -17,9 +17,9 @@
 
 %% semantic macros
 % symbols to denote entire equations
-\NewDocumentCommand {\nc} { m } { \mathcal{N}_{#1} }
-\NewDocumentCommand {\ncm} { m } { \mean{\mathcal{N}_{#1}} }
-\NewDocumentCommand {\ncf} { m } { \mathcal{N}_{#1}' }
+\NewDocumentCommand {\nc} { m } { \mathcal{M}_{#1} }
+\NewDocumentCommand {\ncm} { m } { \mean{\mathcal{M}_{#1}} }
+\NewDocumentCommand {\ncf} { m } { \mathcal{M}_{#1}' }
 % generic vector/tensor
 \NewDocumentCommand{\vv} { m } { \boldsymbol{#1} }
 \NewDocumentCommand{\xv} {  } { \vv{x} }
@@ -59,7 +59,7 @@
                 {\frac{#3^#4 #1}{#3 #2 #3 #2} }
                 {\frac{#3^#4 #1}{#3 #2^#4} }
             } 
-            {{\frac{d #1}{d #2 ^#3}}} % higher derivatives, Einstein notation won't make sense in general
+            {{\frac{#3^#4 #1}{#3 #2 ^#4}}} % higher derivatives, Einstein notation won't make sense in general
         }
 }
 \ExplSyntaxOff
@@ -70,6 +70,7 @@
 \NewDocumentCommand {\diffInlineNormal} { m m  } { \diffInline{#1}{#2}{d} }
 \NewDocumentCommand {\diffInlinePartial} { m m  } { \diffInline{#1}{#2}{\partial} }
 \NewDocumentCommand {\diffInlineTotal} { m m  } { \diffInline{#1}{#2}{D} }
+\NewDocumentCommand {\diffJet} { m m  } { \underset{#2}{#1} }
 \NewDocumentCommand {\um} {g g g g} {\umShort{#1}{#2}{#3}{#4} }
 \NewDocumentCommand {\umShort} {g g g g} {
     \IfNoValueTF{#1}
@@ -365,15 +366,16 @@
         {\theta_{#1}} 
 } 
 \NewDocumentCommand {\pa} { g } { \psi }
+\NewDocumentCommand {\ka} { g } { k_{\theta} }
 \ProvideDocumentCommand {\ualpha} { g } { 
     \IfNoValueTF{#1}
         {v} 
         {v_{#1}} 
 } 
 % k- eps - model
-\NewDocumentCommand {\kepsmodel} {} {\mbox{\(k\)-\(\varepsilon\)-model}}
+\NewDocumentCommand {\keps} {} {{\(k\)-\(\varepsilon\)-}}
 % k- omega - model
-\NewDocumentCommand {\komegamodel} {} {\mbox{\(k\)-\(\omega\)-model}}
+\NewDocumentCommand {\komega} {} {{\(k\)-\(\omega\)-}}
 %Symmetry generators
 \NewDocumentCommand {\infGen} { g } {
     \IfNoValueTF{#1} {X}
@@ -422,3 +424,9 @@
         {T_{\text{Tr,stat},2, #1 }}}
 
 \NewDocumentCommand {\lagX} { m } {\xi_{#1}}
+% group parameter
+\NewDocumentCommand { \grp }{ g } { 
+    \IfNoValueTF{#1}
+    {a}
+    {a_{#1}}
+}

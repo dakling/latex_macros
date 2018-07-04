@@ -1,0 +1,87 @@
+\documentclass{article}
+\usepackage{amsmath}
+
+\title{Example use of macros}
+\input{definLocalExample.tex}
+
+\begin{document}
+\section{RANS equations}
+\begin{align}
+    \label{eq:contirans}
+    \diff{\um{i}}{x_i} &= 0,\\
+    \label{eq:momrans}
+    \ncm{i} = 
+    \diff{\um{i}}{t}
+    + \um{j} \diff{\um{i}}{x_j}
+    + \diff{\pm}{x_i}
+    - \nu \diff{\um{i}}{x_j}{2}
+    + \diff{\uf{i}{j}}{x_j}
+    &= 0.
+\end{align} 
+\section{\(R_{ij}\) transport equation}
+\begin{align}
+\diff{\uf{i}{j}}{t}
+     \nonumber
+    + \um{k} \diff{\uf{i}{j}}{x_k}
+    + \uf{i}{k} \diff{\um{j}}{x_k}
+    + \uf{j}{k} \diff{\um{i}}{x_k}
+    - \mean{\pf \left( \diff{\uf{i}}{x_j} + \diff{\uf{j}}{x_i} \right)}
+    + 2 \nu \mean{ \diff{\uf{i}}{x_k} \diff{\uf{j}}{x_k} }
+    \\
+    \label{eq:reystress}
+    + \diff{}{x_k}
+    \left( 
+        \uf{i}{j}{k}
+        + \mean{(\delta_{jk} \uf{i} + \delta_{ik} \uf{j}) \pf}
+        - \nu \diff{\uf{i}{j}}{x_k}
+    \right)
+    =0.
+\end{align}    
+\section{Euler symmetries}
+\begin{align}
+    \label{eq:symmGloUnavgTime}
+    & \gloSymmT : \enskip
+    &&\tra{t} t + \grp, \enskip
+    &&\tra{x_i} x_i, \enskip
+    &&\tra{U_i} U_i, \enskip
+    &&\tra{P} P;
+    \\ 
+    \label{eq:symmGloUnavgSpace}
+    & \gloSymmX :  \enskip
+    &&\tra{t} t, \enskip
+    &&\tra{x_i} x_i + \grp_i, \enskip
+    &&\tra{U_i} U_i, \enskip
+    &&\tra{P} P;
+    \\
+    \label{eq:symmGloUnavgRot}
+    & \gloSymmRot : \enskip
+    &&\tra{t} t, \enskip
+    &&\tra{x_i} x_j Q_{ij}^{[\alpha]}, \enskip
+    &&\tra{U_i} U_j Q_{ij}^{[\alpha]}, \enskip
+    &&\tra{P} P;\\
+    \label{eq:symmGloUnavgGal}
+    & \gloSymmGal : \enskip
+    &&\tra{t} t, \enskip
+    &&\tra{x_i} x_i + \grp_i t, \enskip
+    &&\tra{U_i} {U_i} + \grp_i, \enskip
+    &&\tra{P} P;\\
+    \label{eq:symmGloUnavgPress}
+    & \gloSymmP : \enskip
+    &&\tra{t} t, \enskip
+    &&\tra{x_i} x_i, \enskip
+    &&\tra{U_i} {U_i}, \enskip
+    &&\tra{P} P + \grp f(t);\\
+    \label{eq:symmGloUnavgScal1}
+    & \gloSymmScI : \enskip
+    &&\tra{t} t, \enskip
+    &&\tra{x_i} x_i e^{\grp}, \enskip
+    &&\tra{U_i} {U_i} e^{\grp}, \enskip
+    &&\tra{P} P e^{2 \grp};\\
+    \label{eq:symmGloUnavgScal2}
+    & \gloSymmScII : \enskip
+    &&\tra{t} e^{\grp}t, \enskip
+    &&\tra{x_i} x_i, \enskip
+    &&\tra{U_i} {U_i} e^{-\grp}, \enskip
+    &&\tra{P} P e^{-2 \grp};
+\end{align}
+\end{document}

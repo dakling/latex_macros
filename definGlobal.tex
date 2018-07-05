@@ -4,7 +4,6 @@
 % \ProvideDocumentCommand{\EinsteinNotationDiff}{}{\BooleanTrue} % affects second derivatives
 % \ProvideDocumentCommand{\ShortHigherMoments}{}{\BooleanTrue} % abbreviate higher one-point velocity moments
 % \ProvideDocumentCommand{\ShowArgsTwoPoint}{}{\BooleanFalse} % show arguments eg in H_ij(x,y) 
-% \ProvideDocumentCommand{\diff}{m m g}{\diffPartial{#1}{#2}{#3}} % most frequently used type of derivative
 
 %% general settings
 %allow double superscripts
@@ -63,20 +62,26 @@
         }
 }
 \ExplSyntaxOff
-\NewDocumentCommand {\diffNormal} { m m g } { \diffGeneric{#1}{#2}{d}{#3} }
-\NewDocumentCommand {\diffPartial} { m m g } { \diffGeneric{#1}{#2}{\partial}{#3} }
-\NewDocumentCommand {\diffTotal} { m m g } { \diffGeneric{#1}{#2}{D}{#3} }
+% total derivative
+\NewDocumentCommand {\dd} { m m g } { \diffGeneric{#1}{#2}{d}{#3} }
+% partial derivative
+\NewDocumentCommand {\pd} { m m g } { \diffGeneric{#1}{#2}{\partial}{#3} }
+% material derivative
+\NewDocumentCommand {\md} { m m g } { \diffGeneric{#1}{#2}{D}{#3} }
 % derivatives without frac 
 \NewDocumentCommand {\diffInline} { m m m  } { {#3 #1}/{#3 #2} }
-\NewDocumentCommand {\diffInlineNormal} { m m  } { \diffInline{#1}{#2}{d} }
-\NewDocumentCommand {\diffInlinePartial} { m m  } { \diffInline{#1}{#2}{\partial} }
-\NewDocumentCommand {\diffInlineTotal} { m m  } { \diffInline{#1}{#2}{D} }
-\NewDocumentCommand {\diffJet} { m m  } { \underset{#2}{#1} }
+\NewDocumentCommand {\did} { m m  } { \diffInline{#1}{#2}{d} }
+\NewDocumentCommand {\pdi} { m m  } { \diffInline{#1}{#2}{\partial} }
+\NewDocumentCommand {\mdi} { m m  } { \diffInline{#1}{#2}{D} }
+% jet derivative
+\NewDocumentCommand {\jd} { m m  } { \underset{#2}{#1} }
 % for a long first arg it is nicer to write d/dx(z+longArg)
 \NewDocumentCommand {\diffLongGeneric} {m m m g} { \diffGeneric{ }{#2}{#3}{#4} \left( #1 \right) }
-\NewDocumentCommand {\diffLongNormal} {m m m g} { \diffLongGeneric{#1}{#2}{d}{#3} }
-\NewDocumentCommand {\diffLongPartial} {m m m g} { \diffLongGeneric{#1}{#2}{\partial}{#3} }
-\NewDocumentCommand {\diffLongTotal} {m m m g} { \diffLongGeneric{#1}{#2}{D}{#3} }
+\NewDocumentCommand {\dld} {m m g} { \diffLongGeneric{#1}{#2}{d}{#3} }
+\NewDocumentCommand {\pdl} {m m g} { \diffLongGeneric{#1}{#2}{\partial}{#3} }
+\NewDocumentCommand {\mdl} {m m g} { \diffLongGeneric{#1}{#2}{D}{#3} }
+
+% velocity moments
 \NewDocumentCommand {\um} {g g g g} {\umShort{#1}{#2}{#3}{#4} }
 \NewDocumentCommand {\umShort} {g g g g} {
     \IfNoValueTF{#1}

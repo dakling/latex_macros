@@ -8,35 +8,43 @@
 \section{RANS equations}
 \begin{align}
     \label{eq:contirans}
-    \diff{\um{i}}{x_i} &= 0,\\
+    \pd{\um{i}}{x_i} &= 0,\\
     \label{eq:momrans}
     \ncm{i} = 
-    \diff{\um{i}}{t}
-    + \um{j} \diff{\um{i}}{x_j}
-    + \diff{\pm}{x_i}
-    - \nu \diff{\um{i}}{x_j}{2}
-    + \diff{\uf{i}{j}}{x_j}
+    \pd{\um{i}}{t}
+    + \um{j} \pd{\um{i}}{x_j}
+    + \pd{\pm}{x_i}
+    - \nu \pd{\um{i}}{x_j}{2}
+    + \pd{\uf{i}{j}}{x_j}
     &= 0.
 \end{align} 
 \section{\(R_{ij}\) transport equation}
 \begin{align}
-\diff{\uf{i}{j}}{t}
+\pd{\uf{i}{j}}{t}
      \nonumber
-    + \um{k} \diff{\uf{i}{j}}{x_k}
-    + \uf{i}{k} \diff{\um{j}}{x_k}
-    + \uf{j}{k} \diff{\um{i}}{x_k}
-    - \mean{\pf \left( \diff{\uf{i}}{x_j} + \diff{\uf{j}}{x_i} \right)}
-    + 2 \nu \mean{ \diff{\uf{i}}{x_k} \diff{\uf{j}}{x_k} }
+    + \um{k} \pd{\uf{i}{j}}{x_k}
+    + \uf{i}{k} \pd{\um{j}}{x_k}
+    + \uf{j}{k} \pd{\um{i}}{x_k}
+    - \mean{\pf \left( \pd{\uf{i}}{x_j} + \pd{\uf{j}}{x_i} \right)}
+    + 2 \nu \mean{ \pd{\uf{i}}{x_k} \pd{\uf{j}}{x_k} }
     \\
     \label{eq:reystress}
-    + \diff{}{x_k}
+    + \pd{}{x_k}
     \left( 
         \uf{i}{j}{k}
         + \mean{(\delta_{jk} \uf{i} + \delta_{ik} \uf{j}) \pf}
-        - \nu \diff{\uf{i}{j}}{x_k}
+        - \nu \pd{\uf{i}{j}}{x_k}
     \right)
     =0.
 \end{align}    
+
+\section{\(k\)-Equation in \komega model}%
+\label{sec:k_equation_in_komega_model}
+\begin{align}
+    \label{eq:kequationOrig}
+    \pd{k}{t} + \um{j} \pd{k}{x_j} &= M_{ij} \pd{\um{i}}{x_j} - \beta \omega k + \pdl{\left(\nu + \nut \sigma_{\text{kin}} \right) \pd{k}{x_l}}{x_l},\\
+\end{align}
+
 \section{Euler symmetries}
 \begin{align}
     \label{eq:symmGloUnavgTime}

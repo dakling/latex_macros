@@ -10,3 +10,8 @@
 - copy the file definLocalExample.tex to your project directory (maybe rename it to definLocal.tex)
 - put \input{definLocal.tex} into your main Latex source document 
 - definLocal.tex loads definGlobal.tex. Possibly adapt definLocal.tex to make sure that it finds definGlobal.tex
+
+# design principles
+- frequently used commands have short names to decrease typing effort and keep the latex source short
+- less frequently used commands have more expressive names
+- commands with short names have to be documented using comments in definGlobal.tex

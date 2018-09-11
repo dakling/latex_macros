@@ -373,8 +373,8 @@
 % artificial velocity 
 \NewDocumentCommand {\ua} { g } { 
     \IfNoValueTF{#1}
-        {\theta} 
-        {\theta_{#1}} 
+    {\mathfrak{U}} 
+    {\mathfrak{U}_{#1}} 
 } 
 \NewDocumentCommand {\pa} { g } { \psi }
 \NewDocumentCommand {\ka} { g } { k_{\theta} }
@@ -393,8 +393,16 @@
         {X_{#1}}
     }
     \NewDocumentCommand {\infGenT} {} {\infGen{t}}
-\NewDocumentCommand {\infGenX} {} {\infGen{x_i}}
-\NewDocumentCommand {\infGenGal} {} {X_{\infGen{\text{Gal}_i}}}
+\NewDocumentCommand {\infGenX} { g } {
+    \IfNoValueTF{#1} 
+    {\infGen{x_i}}
+    {\infGen{x_{#1}}}
+}
+\NewDocumentCommand {\infGenGal} { g } {
+    \IfNoValueTF{#1} 
+    {\infGen{\text{Gal}_i}}
+    {\infGen{\text{Gal}_{#1}}}
+}
 \NewDocumentCommand {\infGenRot} {} {\infGen{\text{rot}_{\alpha}}}
 \NewDocumentCommand {\infGenP} {} {\infGen{P}}
 \NewDocumentCommand {\infGenScI} {} {\infGen{\text{Sc},1}}
@@ -416,15 +424,23 @@
         {T_{#1}}
 }
 \NewDocumentCommand {\gloSymmT} {} {\gloSymm{t}}
-\NewDocumentCommand {\gloSymmX} {} {\gloSymm{x_i}}
-\NewDocumentCommand {\gloSymmGal} {} {\gloSymm{\text{Gal}_i}}
+\NewDocumentCommand {\gloSymmX} { g } {
+    \IfNoValueTF{#1}
+        {\gloSymm{x_i}}
+        {\gloSymm{x_{#1}}}
+}
+\NewDocumentCommand {\gloSymmGal} { g } {
+    \IfNoValueTF{#1}
+        {\gloSymm{\text{Gal}_{i}}}
+        {\gloSymm{\text{Gal}_{#1}}}
+}
 \NewDocumentCommand {\gloSymmRot} {} {\gloSymm{\text{rot}_{\alpha}}}
 \NewDocumentCommand {\gloSymmP} {} {\gloSymm{P}}
 \NewDocumentCommand {\gloSymmScI} {} {\gloSymm{\text{Sc},1}}
 \NewDocumentCommand {\gloSymmScII} {} {\gloSymm{\text{Sc},2}}
 \NewDocumentCommand {\gloSymmScNs} {} {\gloSymm{\text{Sc,ns}}}
 \NewDocumentCommand {\gloSymmScStat} {} {\gloSymm{\text{Sc,stat}}}
-\NewDocumentCommand {\gloSymmTransStat} { m } {X_{\text{Tr,stat,#1}}}
+\NewDocumentCommand {\gloSymmTransStat} { m } {T_{\text{Tr,stat,#1}}}
 \NewDocumentCommand {\gloSymmTransStatI} { o } {%
     \IfNoValueTF{#1}
         {T_{\text{Tr,stat},1}}
@@ -441,3 +457,5 @@
     {a}
     {a_{#1}}
 }
+% model for a term
+\NewDocumentCommand { \model } { m } {\mathcal{M}\left(#1\right)}

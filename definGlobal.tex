@@ -18,6 +18,11 @@
 \NewDocumentCommand {\overbar} { m } {\mkern 1.5mu\overline{\mkern-1.5mu#1\mkern-1.5mu}\mkern 1.5mu}
 
 %% semantic macros
+% real numbers
+\NewDocumentCommand {\real} { o } { 
+    \IfNoValueTF{#1}
+        {\mathbb{R} }
+        {\mathbb{R}^{#1} }}
 % symbols to denote entire equations
 \NewDocumentCommand {\nc} { m } { \mathcal{M}_{#1} }
 \NewDocumentCommand {\ncm} { m } { \mean{\mathcal{M}_{#1}} }

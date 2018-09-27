@@ -373,10 +373,10 @@
 % artificial velocity 
 \NewDocumentCommand {\ua} { g } { 
     \IfNoValueTF{#1}
-        {\theta} 
-        {\theta_{#1}} 
+    {\mathfrak{U}} 
+    {\mathfrak{U}_{#1}} 
 } 
-\NewDocumentCommand {\pa} { g } { \psi }
+\NewDocumentCommand {\pa} { g } { \mathfrak{P} }
 \NewDocumentCommand {\ka} { g } { k_{\theta} }
 \ProvideDocumentCommand {\ualpha} { g } { 
     \IfNoValueTF{#1}
@@ -424,7 +424,7 @@
 \NewDocumentCommand {\gloSymmScII} {} {\gloSymm{\text{Sc},2}}
 \NewDocumentCommand {\gloSymmScNs} {} {\gloSymm{\text{Sc,ns}}}
 \NewDocumentCommand {\gloSymmScStat} {} {\gloSymm{\text{Sc,stat}}}
-\NewDocumentCommand {\gloSymmTransStat} { m } {X_{\text{Tr,stat,#1}}}
+\NewDocumentCommand {\gloSymmTransStat} { m } {T_{\text{Tr,stat,#1}}}
 \NewDocumentCommand {\gloSymmTransStatI} { o } {%
     \IfNoValueTF{#1}
         {T_{\text{Tr,stat},1}}

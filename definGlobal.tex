@@ -1,4 +1,7 @@
 % \usepackage{xparse}
+\usepackage{yfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
 
 % Default settings for all available options
 % \ProvideDocumentCommand{\EinsteinNotationDiff}{}{\BooleanTrue} % affects second derivatives
@@ -53,8 +56,8 @@
 \NewDocumentCommand {\diffGeneric} { m m m g } {
     \IfNoValueTF {#4}
         { \frac{#3 #1}{#3 #2} }
-        { \int_compare:nTF { #4 = 2 } % second derivatives in Einstein notation
-            { \IfBooleanTF {\EinsteinNotationDiff} % check if option is enabled
+        {\int_compare:nTF{ #4=2 } % second derivatives in Einstein notation
+            {\IfBooleanTF{\EinsteinNotationDiff} % check if option is enabled
                 {\frac{#3^{#4} #1}{#3 #2 #3 #2} }
                 {\frac{#3^{#4} #1}{#3 #2^{#4}} }
             } 
@@ -76,7 +79,7 @@
 % jet derivative
 \NewDocumentCommand {\jd} { m m  } { \underset{#2}{#1} }
 % for a long first arg it is nicer to write d/dx(z+longArg)
-\NewDocumentCommand {\diffLongGeneric} {m m m g} { \diffGeneric{ }{#2}{#3}{#4} \left( #1 \right) }
+\NewDocumentCommand{\diffLongGeneric} {m m m g} {\diffGeneric{}{#2}{#3}{#4}{\left(#1 \right)}}
 \NewDocumentCommand {\dld} {m m g} { \diffLongGeneric{#1}{#2}{d}{#3} }
 \NewDocumentCommand {\pdl} {m m g} { \diffLongGeneric{#1}{#2}{\partial}{#3} }
 \NewDocumentCommand {\mdl} {m m g} { \diffLongGeneric{#1}{#2}{D}{#3} }
@@ -99,7 +102,7 @@
 }
 \NewDocumentCommand {\umLong} {g g g g} {
     \IfNoValueTF{#1}
-        { \umShort }
+    { \umShort }
         {\IfNoValueTF{#2}
             {\umShort{#1}}
             { \IfNoValueTF{#3} 
@@ -384,17 +387,25 @@
         {v_{#1}} 
 } 
 % k- eps - model
-\NewDocumentCommand {\keps} {} {{\(k\)-\(\varepsilon\)-}}
+\NewDocumentCommand {\kepsmodel} {} {{\(k\)-\(\varepsilon\)-model}}
 % k- omega - model
-\NewDocumentCommand {\komega} {} {{\(k\)-\(\omega\)-}}
+\NewDocumentCommand {\komegamodel} {} {{\(k\)-\(\omega\)-model}}
 %Symmetry generators
 \NewDocumentCommand {\infGen} { g } {
     \IfNoValueTF{#1} {X}
         {X_{#1}}
     }
     \NewDocumentCommand {\infGenT} {} {\infGen{t}}
-\NewDocumentCommand {\infGenX} {} {\infGen{x_i}}
-\NewDocumentCommand {\infGenGal} {} {X_{\infGen{\text{Gal}_i}}}
+\NewDocumentCommand {\infGenX} { g } {
+    \IfNoValueTF{#1} 
+    {\infGen{x_i}}
+    {\infGen{x_{#1}}}
+}
+\NewDocumentCommand {\infGenGal} { g } {
+    \IfNoValueTF{#1} 
+    {\infGen{\text{Gal}_i}}
+    {\infGen{\text{Gal}_{#1}}}
+}
 \NewDocumentCommand {\infGenRot} {} {\infGen{\text{rot}_{\alpha}}}
 \NewDocumentCommand {\infGenP} {} {\infGen{P}}
 \NewDocumentCommand {\infGenScI} {} {\infGen{\text{Sc},1}}
@@ -416,8 +427,16 @@
         {T_{#1}}
 }
 \NewDocumentCommand {\gloSymmT} {} {\gloSymm{t}}
-\NewDocumentCommand {\gloSymmX} {} {\gloSymm{x_i}}
-\NewDocumentCommand {\gloSymmGal} {} {\gloSymm{\text{Gal}_i}}
+\NewDocumentCommand {\gloSymmX} { g } {
+    \IfNoValueTF{#1}
+        {\gloSymm{x_i}}
+        {\gloSymm{x_{#1}}}
+}
+\NewDocumentCommand {\gloSymmGal} { g } {
+    \IfNoValueTF{#1}
+        {\gloSymm{\text{Gal}_{i}}}
+        {\gloSymm{\text{Gal}_{#1}}}
+}
 \NewDocumentCommand {\gloSymmRot} {} {\gloSymm{\text{rot}_{\alpha}}}
 \NewDocumentCommand {\gloSymmP} {} {\gloSymm{P}}
 \NewDocumentCommand {\gloSymmScI} {} {\gloSymm{\text{Sc},1}}
@@ -441,3 +460,8 @@
     {a}
     {a_{#1}}
 }
+% model for a term
+\NewDocumentCommand { \model } { m } {\mathcal{M}\left(#1\right)}
+
+% cite author's name in possesive form
+% \NewDocumentCommand { \posscite } { m } { \citeauthor }

@@ -90,7 +90,11 @@
 \NewDocumentCommand {\mdl} {m m g} { \diffLongGeneric{#1}{#2}{D}{#3} }
 
 % velocity moments
-\NewDocumentCommand {\um} {g g g g} {\umShort{#1}{#2}{#3}{#4} }
+\NewDocumentCommand {\um} {g g g g} {
+    \IfBooleanTF{\ShortHigherMoments}
+        {\umShort{#1}{#2}{#3}{#4} }
+        {\umLong{#1}{#2}{#3}{#4} }
+}
 \NewDocumentCommand {\umShort} {g g g g} {
     \IfNoValueTF{#1}
         { \mean{U} }

@@ -2,6 +2,7 @@
 \usepackage{yfonts}
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage[noabbrev]{cleveref}
 
 % Default settings for all available options
 % \ProvideDocumentCommand{\EinsteinNotationDiff}{}{\BooleanTrue} % affects second derivatives
@@ -28,7 +29,7 @@
 \NewDocumentCommand {\ncm} { m } { \mean{\mathcal{M}_{#1}} }
 \NewDocumentCommand {\ncf} { m } { \mathcal{M}_{#1}' }
 % generic vector/tensor
-\NewDocumentCommand{\vv} { m } { \boldsymbol{#1} }
+\NewDocumentCommand{\vv} { m } { \bm{#1} }
 \NewDocumentCommand{\xv} {  } { \vv{x} }
 \NewDocumentCommand{\yv} {  } { \vv{y} }
 \NewDocumentCommand{\te} { m } { \mathbf{#1} }
@@ -82,18 +83,52 @@
 \NewDocumentCommand {\pdi} { m m  } { \diffInline{#1}{#2}{\partial} }
 \NewDocumentCommand {\mdi} { m m  } { \diffInline{#1}{#2}{D} }
 % jet derivative
-\NewDocumentCommand {\jd} { m m  } { \underset{#2}{#1} }
+% \NewDocumentCommand {\jd} { m m  } { \underset{#2}{#1} }
+\NewDocumentCommand {\jd} { m m  } { {#1}_{\!,#2} }
 % for a long first arg it is nicer to write d/dx(z+longArg)
-\NewDocumentCommand{\diffLongGeneric} {m m m g} {\diffGeneric{}{#2}{#3}{#4}{\left(#1 \right)}}
+\NewDocumentCommand{\diffLongGeneric} {m m m g} {\diffGeneric{}{#2}{#3}{#4}{#1}}
 \NewDocumentCommand {\dld} {m m g} { \diffLongGeneric{#1}{#2}{d}{#3} }
 \NewDocumentCommand {\pdl} {m m g} { \diffLongGeneric{#1}{#2}{\partial}{#3} }
 \NewDocumentCommand {\mdl} {m m g} { \diffLongGeneric{#1}{#2}{D}{#3} }
 
+\NewDocumentCommand {\diffSecond} { m m m m } {
+    \frac{{#1} ^2 {#2}}{{#1} {#3} {#4}}
+}
+% total derivative
+\NewDocumentCommand {\ddSecond} { m m m } { \diffSecond{d}{#1}{#2}{#3} }
+% partial derivative
+\NewDocumentCommand {\pdSecond} { m m m } { \diffSecond{\partial}{#1}{#2}{#3} }
+% material derivative
+\NewDocumentCommand {\mdSecond} { m m m } { \diffSecond{D}{#1}{#2}{#3} }
+
+
 % velocity moments
 \NewDocumentCommand {\um} {g g g g} {
-    \IfBooleanTF{\ShortHigherMoments}
+    \IfBooleanTF{\OnePointExponent}
+    {
+        \IfBooleanTF{\ShortHigherMoments}
         {\umShort{#1}{#2}{#3}{#4} }
         {\umLong{#1}{#2}{#3}{#4} }
+    }
+    {
+        \IfBooleanTF{\ShortHigherMoments}
+        {\umShortNoExp{#1}{#2}{#3}{#4} }
+        {\umLongNoExp{#1}{#2}{#3}{#4} }
+    }
+}
+\NewDocumentCommand {\umShortNoExp} {g g g g} {
+    \IfNoValueTF{#1}
+        { \mean{U} }
+        {\IfNoValueTF{#2}
+            {\mean{U}_{#1}}
+            { \IfNoValueTF{#3} 
+                {H_{#1 #2}}
+                { \IfNoValueTF{#4}
+                    {H_{#1 #2 #3}}
+                {H_{#1 #2 #3 #4}}
+            }
+        }
+    }
 }
 \NewDocumentCommand {\umShort} {g g g g} {
     \IfNoValueTF{#1}
@@ -124,9 +159,31 @@
     }
 }
 \NewDocumentCommand {\uf} {g g g g} {
-    \IfBooleanTF{\ShortHigherMoments}
+    \IfBooleanTF{\OnePointExponent}
+    {
+        \IfBooleanTF{\ShortHigherMoments}
         {\ufShort{#1}{#2}{#3}{#4} }
         {\ufLong{#1}{#2}{#3}{#4} }
+    }
+    {
+        \IfBooleanTF{\ShortHigherMoments}
+        {\ufShortNoExp{#1}{#2}{#3}{#4} }
+        {\ufLongNoExp{#1}{#2}{#3}{#4} }
+    }
+}
+\NewDocumentCommand {\ufShortNoExp} {g g g g} {
+    \IfNoValueTF{#1}
+        { u }
+        {\IfNoValueTF{#2}
+            {u_{#1}}
+            { \IfNoValueTF{#3} 
+                {R_{#1 #2}}
+                { \IfNoValueTF{#4}
+                    {R_{#1 #2 #3}}
+                {R_{#1 #2 #3 #4}}
+            }
+        }
+    }
 }
 \NewDocumentCommand {\ufShort} {g g g g} {
     \IfNoValueTF{#1}
@@ -186,6 +243,10 @@
 }
 \NewDocumentCommand {\upm} { m } {
         \mean{U_{#1}P}^{0}
+        % {\mean{U_{#1}P}(\vv{#2},\vv{#3})}
+}
+\NewDocumentCommand {\umpx} { m m } {
+    \mean{U_{#1} \jd{P}{x_{#2}}}
         % {\mean{U_{#1}P}(\vv{#2},\vv{#3})}
 }
 \NewDocumentCommand {\puf} { m } {
@@ -428,7 +489,7 @@
 }
 \NewDocumentCommand {\infGenGal} { g } {
     \IfNoValueTF{#1} 
-    {\infGen{\text{Gal}_i}}
+    {\infGen{\text{Gal}}}
     {\infGen{\text{Gal}_{#1}}}
 }
 \NewDocumentCommand {\infGenRot} {} {\infGen{\text{rot}_{\alpha}}}
@@ -485,13 +546,14 @@
     {a}
     {a_{#1}}
 }
-\NewDocumentCommand { \expgrp }{ } { 
+\NewDocumentCommand { \expgrp }{ g } { 
     \IfBooleanTF{\GroupExpSimplified}
     {a}
-    {e^{a}}
+    {e^{#1 a}}
 }
 % model for a term
 \NewDocumentCommand { \model } { m } {\mathcal{M}\left(#1\right)}
 
 % cite author's name in possesive form
 % \NewDocumentCommand { \posscite } { m } { \citeauthor }
+\newcommand{\crefrangeconjunction}{--}

@@ -14,6 +14,8 @@
 \catcode`\^ = 13 \def^#1{\sp{#1}{}}
 % \catcode`\_ = 13 \def_#1{\sb{#1}{}}
 
+% use with align*-environment
+\newcommand\donumber{\addtocounter{equation}{1}\tag{\theequation}}
 %% low-level macros
 % definition of a good looking bar
 \NewDocumentCommand {\overbar} { m } {\mkern 1.5mu\overline{\mkern-1.5mu#1\mkern-1.5mu}\mkern 1.5mu}
@@ -92,7 +94,7 @@
 \NewDocumentCommand {\mdl} {m m g} { \diffLongGeneric{#1}{#2}{D}{#3} }
 
 \NewDocumentCommand {\diffSecond} { m m m m } {
-    \frac{{#1} ^2 {#2}}{{#1} {#3} {#4}}
+    \frac{{#1} ^2 {#2}}{{#1} {#3} {#1} {#4}}
 }
 % total derivative
 \NewDocumentCommand {\ddSecond} { m m m } { \diffSecond{d}{#1}{#2}{#3} }

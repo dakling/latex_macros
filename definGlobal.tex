@@ -2,6 +2,7 @@
 \usepackage{yfonts}
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{csquotes}
 \usepackage[noabbrev]{cleveref}
 
 % Default settings for all available options
@@ -555,6 +556,13 @@
 }
 % model for a term
 \NewDocumentCommand { \model } { m } {\mathcal{M}\left(#1\right)}
+
+% integration constant
+\NewDocumentCommand { \intconst } { m o } {
+\IfNoValueTF{#2}
+  {c_{#1}}
+  {c_{#1; #2}}
+}
 
 % cite author's name in possesive form
 % \NewDocumentCommand { \posscite } { m } { \citeauthor }

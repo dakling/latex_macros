@@ -4,6 +4,7 @@
 \usepackage{amssymb}
 \usepackage{csquotes}
 \usepackage[noabbrev]{cleveref}
+\usepackage{xifthen}
 
 % Default settings for all available options
 % \ProvideDocumentCommand{\EinsteinNotationDiff}{}{\BooleanTrue} % affects second derivatives
@@ -12,7 +13,7 @@
 
 %% general settings
 %allow double superscripts
-\catcode`\^ = 13 \def^#1{\sp{#1}{}}
+% \catcode`\^ = 13 \def^#1{\sp{#1}{}}
 % \catcode`\_ = 13 \def_#1{\sb{#1}{}}
 
 % use with align*-environment
@@ -47,7 +48,7 @@
 % evaluate (eg derivative) at position
 \NewDocumentCommand {\atpos} { m m } { \bigg|_{{#1} = {#2}} }
 % transformed (symmetries)
-\NewDocumentCommand {\tra} {m} {\traAnco{#1}}
+\NewDocumentCommand {\tra} {m} {\traAltEq{#1}}
 \NewDocumentCommand {\traAnco} {m} {#1 \rightarrow}
 \NewDocumentCommand {\traAlt} {m} {{#1}^* }
 \NewDocumentCommand {\traAltEq} {m} {{#1}^* = }
@@ -87,7 +88,9 @@
 \NewDocumentCommand {\mdi} { m m  } { \diffInline{#1}{#2}{D} }
 % jet derivative
 % \NewDocumentCommand {\jd} { m m  } { \underset{#2}{#1} }
-\NewDocumentCommand {\jd} { m m  } { {#1}_{\!,#2} }
+% \NewDocumentCommand {\jd} { m m  } { {#1}_{{\!,{#2}}} }
+\NewDocumentCommand {\jd} { m m  } { {#1}{}_{{\!,{#2}}} }
+
 % for a long first arg it is nicer to write d/dx(z+longArg)
 \NewDocumentCommand{\diffLongGeneric} {m m m g} {\diffGeneric{}{#2}{#3}{#4}{#1}}
 \NewDocumentCommand {\dld} {m m g} { \diffLongGeneric{#1}{#2}{d}{#3} }
@@ -121,28 +124,43 @@
 }
 \NewDocumentCommand {\umShortNoExp} {g g g g} {
     \IfNoValueTF{#1}
-        { \mean{U} }
+        {{ \mean{U} }}
         {\IfNoValueTF{#2}
-            {\mean{U}_{#1}}
+            {{\mean{U}_{#1}}}
             { \IfNoValueTF{#3} 
-                {H_{#1 #2}}
+                {H_{{#1} {#2}}}
                 { \IfNoValueTF{#4}
-                    {H_{#1 #2 #3}}
-                {H_{#1 #2 #3 #4}}
+                    {{H_{{#1} {#2} {#3}}}}
+                {{H_{{#1} {#2} {#3} {#4}}}}
             }
         }
     }
 }
+\NewDocumentCommand {\umLongNoExp} {g g g g} {
+    \IfNoValueTF{#1}
+        {{ \mean{U} }}
+        {\IfNoValueTF{#2}
+            {{\mean{U}_{#1}}}
+            { \IfNoValueTF{#3} 
+                {\mean{U_{#1} U_{#2}}}
+                { \IfNoValueTF{#4}
+                  {\mean{U_{#1} U_{#2} U_{#3}}}
+                {\mean{U_{#1} U_{#2} U_{#3} U_#4}}
+            }
+        }
+    }
+}
+
 \NewDocumentCommand {\umShort} {g g g g} {
     \IfNoValueTF{#1}
-        { \mean{U} }
+        {{ \mean{U} }}
         {\IfNoValueTF{#2}
-            {\mean{U}_{#1}}
+            {{\mean{U}_{#1}}}
             { \IfNoValueTF{#3} 
-                {H_{#1 #2}^0}
+                {H_{{#1} {#2}}^0}
                 { \IfNoValueTF{#4}
-                    {H_{#1 #2 #3}^0}
-                {H_{#1 #2 #3 #4}^0}
+                    {H_{{#1} {#2} {#3}}^0}
+                {H_{{#1} {#2} {#3} {#4}}^0}
             }
         }
     }
@@ -178,40 +196,56 @@
     \IfNoValueTF{#1}
         { u }
         {\IfNoValueTF{#2}
-            {u_{#1}}
+            {{u_{#1}}}
             { \IfNoValueTF{#3} 
-                {R_{#1 #2}}
+                {{R_{{#1} {#2}}}}
                 { \IfNoValueTF{#4}
-                    {R_{#1 #2 #3}}
-                {R_{#1 #2 #3 #4}}
+                    {R_{{#1} {#2} {#3}}}
+                {{R_{{#1} {#2} {#3} {#4}}}}
             }
         }
     }
 }
+
+\NewDocumentCommand {\ufLongNoExp} {g g g g} {
+    \IfNoValueTF{#1}
+        {{ u }}
+        {\IfNoValueTF{#2}
+            {{u_{#1}}}
+            { \IfNoValueTF{#3} 
+                {{\mean{u_{#1} u_{#2}}}}
+                { \IfNoValueTF{#4}
+                  {{\mean{u_{#1} u_{#2} u_{#3}}}}
+                {{\mean{u_{#1} u_{#2} u_{#3} u_#4}}}
+            }
+        }
+    }
+}
+
 \NewDocumentCommand {\ufShort} {g g g g} {
     \IfNoValueTF{#1}
-        { u }
+        {{ u }}
         {\IfNoValueTF{#2}
-            {u_{#1}}
+            {{u_{#1}}}
             { \IfNoValueTF{#3} 
-                {R_{#1 #2}^0}
+                {{R_{{#1} {#2}}^{0}}}
                 { \IfNoValueTF{#4}
-                    {R_{#1 #2 #3}^0}
-                {R_{#1 #2 #3 #4}^0}
+                    {{R_{{#1} {#2} {#3}}^{0}}}
+                {{R_{{#1} {#2} {#3} {#4}}^{0}}}
             }
         }
     }
 }
 \NewDocumentCommand {\ufLong} {g g g g} {
     \IfNoValueTF{#1}
-        { \ufShort }
+        {{ \ufShort }}
         {\IfNoValueTF{#2}
-            {\ufShort{#1}}
+            {{\ufShort{#1}}}
             { \IfNoValueTF{#3} 
-                { \mean{ u_{#1} u_{#2} } }
+                {{ \mean{ u_{#1} u_{#2} } }}
                 { \IfNoValueTF{#4}
-                    {\mean{ u_{#1} u_{#2} u_{#3} }}
-                {\mean{ u_{#1} u_{#2} u_{#3} u_{#4} }}
+                    {{\mean{ u_{#1} u_{#2} u_{#3} }}}
+                {{\mean{ u_{#1} u_{#2} u_{#3} u_{#4} }}}
             } 
         }
     }
@@ -493,23 +527,23 @@
 \NewDocumentCommand {\infGenGal} { g } {
     \IfNoValueTF{#1} 
     {\infGen{\text{Gal}}}
-    {\infGen{\text{Gal}_{#1}}}
+    {\infGen{{\text{Gal}_{{#1}}}}}
 }
-\NewDocumentCommand {\infGenRot} {} {\infGen{\text{rot}_{\alpha}}}
+\NewDocumentCommand {\infGenRot} {} {\infGen{{\text{rot}_{\alpha}}}}
 \NewDocumentCommand {\infGenP} {} {\infGen{P}}
 \NewDocumentCommand {\infGenScI} {} {\infGen{\text{Sc},1}}
 \NewDocumentCommand {\infGenScII} {} {\infGen{\text{Sc},2}}
 \NewDocumentCommand {\infGenScNs} {} {\infGen{\text{Sc,ns}}}
 \NewDocumentCommand {\infGenScStat} {} {\infGen{\text{Sc,stat}}}
-\NewDocumentCommand {\infGenTransStat} { m } {X_{\text{Tr,stat,#1}}}
+\NewDocumentCommand {\infGenTransStat} { m } {X_{{\text{Tr,stat,{#1}}}}}
 \NewDocumentCommand {\infGenTransStatI} { o } {%
     \IfNoValueTF{#1}
         {X_{\text{Tr,stat},1}}
-        {X_{\text{Tr,stat},1, #1 }}}
+        {X_{\text{Tr,stat},1, {#1} }}}
 \NewDocumentCommand {\infGenTransStatII} { o } {%
     \IfNoValueTF{#1}
         {X_{\text{Tr,stat},2}}
-        {X_{\text{Tr,stat},2, #1 }}}
+        {X_{\text{Tr,stat},2, {#1} }}}
 %Global form
 \NewDocumentCommand {\gloSymm} { g } {
     \IfNoValueTF{#1} {T}
@@ -532,15 +566,15 @@
 \NewDocumentCommand {\gloSymmScII} {} {\gloSymm{\text{Sc},2}}
 \NewDocumentCommand {\gloSymmScNs} {} {\gloSymm{\text{Sc,ns}}}
 \NewDocumentCommand {\gloSymmScStat} {} {\gloSymm{\text{Sc,stat}}}
-\NewDocumentCommand {\gloSymmTransStat} { m } {T_{\text{Tr,stat,#1}}}
+\NewDocumentCommand {\gloSymmTransStat} { m } {T_{\text{Tr,stat,{#1}}}}
 \NewDocumentCommand {\gloSymmTransStatI} { o } {%
     \IfNoValueTF{#1}
         {T_{\text{Tr,stat},1}}
-        {T_{\text{Tr,stat},1, #1 }}}
+        {T_{\text{Tr,stat},1, {#1} }}}
 \NewDocumentCommand {\gloSymmTransStatII} { o } {%
     \IfNoValueTF{#1}
         {T_{\text{Tr,stat},2}}
-        {T_{\text{Tr,stat},2, #1 }}}
+        {T_{\text{Tr,stat},2, {#1} }}}
 
 \NewDocumentCommand {\lagX} { m } {\xi_{#1}}
 % group parameter
@@ -552,10 +586,10 @@
 \NewDocumentCommand { \expgrp }{ g } { 
     \IfBooleanTF{\GroupExpSimplified}
     {a}
-    {e^{#1 a}}
+    {e^{{#1} a}}
 }
 % model for a term
-\NewDocumentCommand { \model } { m } {\mathcal{M}\left(#1\right)}
+\NewDocumentCommand { \model } { m } {\mathcal{M}\left({#1}\right)}
 
 % integration constant
 \NewDocumentCommand { \intconst } { m g } {

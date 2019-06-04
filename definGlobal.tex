@@ -46,7 +46,8 @@
     {\textit{O}(#1)^{#2} }
 }
 % evaluate (eg derivative) at position
-\NewDocumentCommand {\atpos} { m m } { \bigg|_{{#1} = {#2}} }
+\NewDocumentCommand {\atpos} { m m } { \bigg|_{{#1} = {#2}} } % use evalfun instead!
+\NewDocumentCommand {\evalfun} {m m m} {\left.\kern-\nulldelimiterspace {#1} \right|_{{#2} = {#3}}}
 % transformed (symmetries)
 \NewDocumentCommand {\tra} {m} {\traAltEq{#1}}
 \NewDocumentCommand {\traAnco} {m} {#1 \rightarrow}
@@ -536,11 +537,11 @@
 \NewDocumentCommand {\infGenScNs} {} {\infGen{\text{Sc,ns}}}
 \NewDocumentCommand {\infGenScStat} {} {\infGen{\text{Sc,stat}}}
 \NewDocumentCommand {\infGenTransStat} { m } {X_{{\text{Tr,stat,{#1}}}}}
-\NewDocumentCommand {\infGenTransStatI} { o } {%
+\NewDocumentCommand {\infGenTransStatI} { g } {%
     \IfNoValueTF{#1}
         {X_{\text{Tr,stat},1}}
         {X_{\text{Tr,stat},1, {#1} }}}
-\NewDocumentCommand {\infGenTransStatII} { o } {%
+\NewDocumentCommand {\infGenTransStatII} { g } {%
     \IfNoValueTF{#1}
         {X_{\text{Tr,stat},2}}
         {X_{\text{Tr,stat},2, {#1} }}}
@@ -567,11 +568,11 @@
 \NewDocumentCommand {\gloSymmScNs} {} {\gloSymm{\text{Sc,ns}}}
 \NewDocumentCommand {\gloSymmScStat} {} {\gloSymm{\text{Sc,stat}}}
 \NewDocumentCommand {\gloSymmTransStat} { m } {T_{\text{Tr,stat,{#1}}}}
-\NewDocumentCommand {\gloSymmTransStatI} { o } {%
+\NewDocumentCommand {\gloSymmTransStatI} { g } {%
     \IfNoValueTF{#1}
         {T_{\text{Tr,stat},1}}
         {T_{\text{Tr,stat},1, {#1} }}}
-\NewDocumentCommand {\gloSymmTransStatII} { o } {%
+\NewDocumentCommand {\gloSymmTransStatII} { g } {%
     \IfNoValueTF{#1}
         {T_{\text{Tr,stat},2}}
         {T_{\text{Tr,stat},2, {#1} }}}
@@ -583,10 +584,37 @@
     {a}
     {a_{#1}}
 }
+\NewDocumentCommand {\grpT} {} {\grp{T}}
+\NewDocumentCommand {\grpX} { g } {
+    \IfNoValueTF{#1}
+        {\grp{x_i}}
+        {\grp{x_{#1}}}
+}
+\NewDocumentCommand {\grpGal} { g } {
+    \IfNoValueTF{#1}
+        {\grp{\text{Gal}_{i}}}
+        {\grp{\text{Gal}_{#1}}}
+}
+\NewDocumentCommand {\grpRot} {} {\grp{\text{rot}_{\alpha}}}
+\NewDocumentCommand {\grpP} {} {\grp{P}}
+\NewDocumentCommand {\grpScI} {} {\grp{\text{Sc},1}}
+\NewDocumentCommand {\grpScII} {} {\grp{\text{Sc},2}}
+\NewDocumentCommand {\grpScNs} {} {\grp{\text{Sc,ns}}}
+\NewDocumentCommand {\grpScStat} {} {\grp{\text{Sc,stat}}}
+\NewDocumentCommand {\grpTransStat} { m } {\grp{\text{Tr,stat,{#1}}}}
+\NewDocumentCommand {\grpTransStatI} { g } {%
+    \IfNoValueTF{#1}
+        {\grp{\text{Tr,stat},1}}
+        {\grp{\text{Tr,stat},1, {#1} }}}
+\NewDocumentCommand {\grpTransStatII} { g } {%
+    \IfNoValueTF{#1}
+        {\grp{\text{Tr,stat},2}}
+        {\grp{\text{Tr,stat},2, {#1} }}}
+
 \NewDocumentCommand { \expgrp }{ g } { 
     \IfBooleanTF{\GroupExpSimplified}
-    {a}
-    {e^{{#1} a}}
+    {\grp}
+    {e^{{#1} \grp}}
 }
 % model for a term
 \NewDocumentCommand { \model } { m } {\mathcal{M}_{#1}}

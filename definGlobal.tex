@@ -29,9 +29,9 @@
         {\mathbb{R} }
         {\mathbb{R}^{#1} }}
 % symbols to denote entire equations
-\NewDocumentCommand {\nc} { m } { \mathcal{M}_{#1} }
-\NewDocumentCommand {\ncm} { m } { \mean{\mathcal{M}_{#1}} }
-\NewDocumentCommand {\ncf} { m } { \mathcal{M}_{#1}' }
+\NewDocumentCommand {\nc} { m } { \mathcal{N}_{#1} }
+\NewDocumentCommand {\ncm} { m } { \mean{\mathcal{N}_{#1}} }
+\NewDocumentCommand {\ncf} { m } { \mathcal{N}_{#1}' }
 % generic vector/tensor
 \NewDocumentCommand{\vv} { m } { \bm{#1} }
 \NewDocumentCommand{\xv} {  } { \vv{x} }
@@ -276,23 +276,23 @@
 }
 \ExplSyntaxOff
 \NewDocumentCommand {\pum} { m } {
-        \mean{PU_{#1}}^{0}
+        \mean{PU_{#1}}^{(0)}
         % {\mean{PU_{#1}}(\vv{#2},\vv{#3})}
 }
 \NewDocumentCommand {\upm} { m } {
-        \mean{U_{#1}P}^{0}
+        \mean{U_{#1}P}^{(0)}
         % {\mean{U_{#1}P}(\vv{#2},\vv{#3})}
 }
 \NewDocumentCommand {\umpx} { m m } {
-    \mean{U_{#1} \jd{P}{x_{#2}}}
+    \mean{U_{#1} \jd{P}{x_{#2}}}^{(0)}
         % {\mean{U_{#1}P}(\vv{#2},\vv{#3})}
 }
 \NewDocumentCommand {\puf} { m } {
-        \mean{pu_{#1}}^{0}
+        \mean{pu_{#1}}^{(0)}
         % {\mean{pu_{#1}}(\vv{#2},\vv{#3})}
 }
 \NewDocumentCommand {\upf} { m } {
-        \mean{u_{#1}p}^{0}
+        \mean{u_{#1}p}^{(0)}
         % {\mean{u_{#1}p}(\vv{#2},\vv{#3})}
 }
 % two-point correlations
@@ -532,19 +532,19 @@
 }
 \NewDocumentCommand {\infGenRot} {} {\infGen{{\text{rot}_{\alpha}}}}
 \NewDocumentCommand {\infGenP} {} {\infGen{P}}
-\NewDocumentCommand {\infGenScI} {} {\infGen{\text{Sc},1}}
-\NewDocumentCommand {\infGenScII} {} {\infGen{\text{Sc},2}}
+\NewDocumentCommand {\infGenScI} {} {\infGen{\text{Sc},I}}
+\NewDocumentCommand {\infGenScII} {} {\infGen{\text{Sc},II}}
 \NewDocumentCommand {\infGenScNs} {} {\infGen{\text{Sc,ns}}}
 \NewDocumentCommand {\infGenScStat} {} {\infGen{\text{Sc,stat}}}
 \NewDocumentCommand {\infGenTransStat} { m } {X_{{\text{Tr,stat,{#1}}}}}
 \NewDocumentCommand {\infGenTransStatI} { g } {%
     \IfNoValueTF{#1}
-        {X_{\text{Tr,stat},1}}
-        {X_{\text{Tr,stat},1, {#1} }}}
+        {X_{\text{Tr,stat},I}}
+        {X_{\text{Tr,stat},I, {#1} }}}
 \NewDocumentCommand {\infGenTransStatII} { g } {%
     \IfNoValueTF{#1}
-        {X_{\text{Tr,stat},2}}
-        {X_{\text{Tr,stat},2, {#1} }}}
+        {X_{\text{Tr,stat},II}}
+        {X_{\text{Tr,stat},II, {#1} }}}
 %Global form
 \NewDocumentCommand {\gloSymm} { g } {
     \IfNoValueTF{#1} {T}
@@ -563,19 +563,19 @@
 }
 \NewDocumentCommand {\gloSymmRot} {} {\gloSymm{\text{rot}_{\alpha}}}
 \NewDocumentCommand {\gloSymmP} {} {\gloSymm{P}}
-\NewDocumentCommand {\gloSymmScI} {} {\gloSymm{\text{Sc},1}}
-\NewDocumentCommand {\gloSymmScII} {} {\gloSymm{\text{Sc},2}}
+\NewDocumentCommand {\gloSymmScI} {} {\gloSymm{\text{Sc},I}}
+\NewDocumentCommand {\gloSymmScII} {} {\gloSymm{\text{Sc},II}}
 \NewDocumentCommand {\gloSymmScNs} {} {\gloSymm{\text{Sc,ns}}}
 \NewDocumentCommand {\gloSymmScStat} {} {\gloSymm{\text{Sc,stat}}}
 \NewDocumentCommand {\gloSymmTransStat} { m } {T_{\text{Tr,stat,{#1}}}}
 \NewDocumentCommand {\gloSymmTransStatI} { g } {%
     \IfNoValueTF{#1}
-        {T_{\text{Tr,stat},1}}
-        {T_{\text{Tr,stat},1, {#1} }}}
+        {T_{\text{Tr,stat},I}}
+        {T_{\text{Tr,stat},I, {#1} }}}
 \NewDocumentCommand {\gloSymmTransStatII} { g } {%
     \IfNoValueTF{#1}
-        {T_{\text{Tr,stat},2}}
-        {T_{\text{Tr,stat},2, {#1} }}}
+        {T_{\text{Tr,stat},II}}
+        {T_{\text{Tr,stat},II, {#1} }}}
 
 \NewDocumentCommand {\lagX} { m } {\xi_{#1}}
 % group parameter
@@ -597,25 +597,37 @@
 }
 \NewDocumentCommand {\grpRot} {} {\grp{\text{rot}_{\alpha}}}
 \NewDocumentCommand {\grpP} {} {\grp{P}}
-\NewDocumentCommand {\grpScI} {} {\grp{\text{Sc},1}}
-\NewDocumentCommand {\grpScII} {} {\grp{\text{Sc},2}}
+\NewDocumentCommand {\grpScI} {} {\grp{\text{Sc},I}}
+\NewDocumentCommand {\grpScII} {} {\grp{\text{Sc},II}}
 \NewDocumentCommand {\grpScNs} {} {\grp{\text{Sc,ns}}}
 \NewDocumentCommand {\grpScStat} {} {\grp{\text{Sc,stat}}}
 \NewDocumentCommand {\grpTransStat} { m } {\grp{\text{Tr,stat,{#1}}}}
 \NewDocumentCommand {\grpTransStatI} { g } {%
     \IfNoValueTF{#1}
-        {\grp{\text{Tr,stat},1}}
-        {\grp{\text{Tr,stat},1, {#1} }}}
+        {\grp{\text{Tr,stat},I}}
+        {\grp{\text{Tr,stat},I, {#1} }}}
 \NewDocumentCommand {\grpTransStatII} { g } {%
     \IfNoValueTF{#1}
-        {\grp{\text{Tr,stat},2}}
-        {\grp{\text{Tr,stat},2, {#1} }}}
+        {\grp{\text{Tr,stat},II}}
+        {\grp{\text{Tr,stat},II, {#1} }}}
+\NewDocumentCommand {\grpTransStatIII} { g } {%
+    \IfNoValueTF{#1}
+        {\grp{\text{Tr,stat},III}}
+        {\grp{\text{Tr,stat},III, {#1} }}}
 
 \NewDocumentCommand { \expgrp }{ g } { 
     \IfBooleanTF{\GroupExpSimplified}
     {\grp}
     {e^{{#1} \grp}}
 }
+%for galileian group
+\NewDocumentCommand{\ftGal} {m} {f_{\text{Gal}_{#1}} (t)}
+\NewDocumentCommand{\ftpGal} {m} {f_{\text{Gal}_{#1}}^{\prime} (t)}
+\NewDocumentCommand{\ftppGal} {m} {f_{\text{Gal}_{#1}}^{\prime\prime} (t)}
+%for pressure translation
+\NewDocumentCommand{\ftP} { } {f_{P} (t)}
+\NewDocumentCommand{\ftpP} { } {f_{P}^{\prime} (t)}
+\NewDocumentCommand{\ftppP} { } {f_{P}^{\prime\prime} (t)}
 % model for a term
 \NewDocumentCommand { \model } { m } {\mathcal{M}_{#1}}
 

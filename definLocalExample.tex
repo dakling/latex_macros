@@ -10,11 +10,11 @@
 
 %set local variables
 % for example, in presentations, I prefer to use a simpler notation, even if it makes everything longer
-\NewDocumentCommand{\EinsteinNotationDiff}{}{\BooleanTrue} % affects second derivatives
-\NewDocumentCommand{\ShortHigherMoments}{}{\BooleanTrue} % abbreviate higher one-point velocity moments
-\NewDocumentCommand{\ShowArgsTwoPoint}{}{\BooleanFalse} % show arguments eg in H_ij(x,y) 
-\NewDocumentCommand{\GroupExpSimplified}{}{\BooleanFalse} % use linear group parameter for scaling symmetries, not exp(a)
-\NewDocumentCommand{\OnePointExponent}{}{\BooleanFalse} % show ^0 for H and R one-point
+\toggletrue{EinsteinNotationDiff}
+\toggletrue{\ShortHigherMoments} % abbreviate higher one-point velocity moments
+\togglefalse{\ShowArgsTwoPoint} % show arguments eg in H_ij(x,y) 
+\togglefalse{\GroupExpSimplified} % use linear group parameter for scaling symmetries, not exp(a)
+\togglefalse{\OnePointExponent} % show ^0 for H and R one-point
 
 % allow align environment to span multiple pages - important for symmetries
 \allowdisplaybreaks

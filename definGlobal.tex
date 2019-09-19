@@ -45,16 +45,16 @@
 \NewDocumentCommand {\order} { m g } { 
     \IfNoValueTF{#2}
     {\textit{O}(#1) }
-    {\textit{O}(#1)^{#2} }
+    {\textit{O}({#1}^{#2}) }
 }
 % evaluate (eg derivative) at position
 \NewDocumentCommand {\atpos} { m m } { \bigg|_{{#1} = {#2}} } % use evalfun instead!
-\NewDocumentCommand {\evalfun} {m m m} {\left.\kern-\nulldelimiterspace {#1} \right|_{{#2} = {#3}}}
-% \NewDocumentCommand {\evalfun} {m m m} {\left. {#1} \right|_{{#2} = {#3}}}
+\NewDocumentCommand {\evalfunI} {m m m} {\left.\kern-\nulldelimiterspace {#1} \right|_{{#2} = {#3}}}
+\NewDocumentCommand {\evalfun} {m m m} {\left. #1 \right|_{{#2} = {#3}}}
 % transformed (symmetries)
 \NewDocumentCommand {\tra} {m} {\traAltEq{#1}}
 \NewDocumentCommand {\traAnco} {m} {#1 \rightarrow}
-\NewDocumentCommand {\traAlt} {m} {{#1}^* }
+\NewDocumentCommand {\traAlt} {m} {#1^* }
 \NewDocumentCommand {\traAltEq} {m} {{#1}^* = }
 % representation of similarity variables
 \NewDocumentCommand {\simvar} {m} {\widetilde{#1}}
@@ -113,6 +113,16 @@
 
 
 % velocity moments
+\NewDocumentCommand {\umv} {} {
+\bar{\vv{U}}
+}
+\NewDocumentCommand {\uav} {} {
+\hat{\vv{U}}
+}
+\NewDocumentCommand {\ufv} {} {
+\mean{\vv{u} \otimes \vv{u}}
+}
+
 \NewDocumentCommand {\um} {g g g g} {
     \iftoggle{OnePointExponent}
     {
@@ -503,11 +513,11 @@
 % artificial velocity 
 \NewDocumentCommand {\ua} { g } { 
     \IfNoValueTF{#1}
-    {\mathfrak{U}} 
-    {\mathfrak{U}_{#1}} 
+    {\hat{U}} 
+    {\hat{U}_{#1}} 
 } 
-\NewDocumentCommand {\pa} { g } { \mathfrak{P} }
-\NewDocumentCommand {\ka} { g } { k_{\theta} }
+\NewDocumentCommand {\pa} { g } { \hat{P} }
+\NewDocumentCommand {\ka} { g } { \hat{k} }
 \ProvideDocumentCommand {\ualpha} { g } { 
     \IfNoValueTF{#1}
         {v} 

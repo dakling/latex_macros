@@ -97,7 +97,7 @@
 
 % for a long first arg it is nicer to write d/dx(z+longArg)
 \NewDocumentCommand{\diffLongGeneric} {m m m g} {\diffGeneric{}{#2}{#3}{#4}{#1}}
-\NewDocumentCommand {\dld} {m m g} { \diffLongGeneric{#1}{#2}{d}{#3} }
+\NewDocumentCommand {\ddl} {m m g} { \diffLongGeneric{#1}{#2}{d}{#3} }
 \NewDocumentCommand {\pdl} {m m g} { \diffLongGeneric{#1}{#2}{\partial}{#3} }
 \NewDocumentCommand {\mdl} {m m g} { \diffLongGeneric{#1}{#2}{D}{#3} }
 

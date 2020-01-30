@@ -12,6 +12,7 @@
 \newtoggle{ShowArgsTwoPoint} % show arguments eg in H_ij(x,y) 
 \newtoggle{GroupExpSimplified} % use linear group parameter for scaling symmetries, not exp(a)
 \newtoggle{OnePointExponent} % show ^0 for H and R one-point
+\newtoggle{EinsteinSumConvention} % Hide sum signs if Einstein summation convention is active
 
 %% general settings
 %allow double superscripts
@@ -35,7 +36,7 @@
 \NewDocumentCommand {\ncm} { m } { \mean{\mathcal{N}_{#1}} }
 \NewDocumentCommand {\ncf} { m } { \mathcal{N}_{#1}' }
 % generic vector/tensor
-\NewDocumentCommand{\vv} { m } { \bm{#1} }
+\NewDocumentCommand{\vv} { m } { \mathbf{#1} }
 \NewDocumentCommand{\xv} {  } { \vv{x} }
 \NewDocumentCommand{\yv} {  } { \vv{y} }
 \NewDocumentCommand{\te} { m } { \mathbf{#1} }
@@ -47,6 +48,7 @@
     {\textit{O}(#1) }
     {\textit{O}({#1}^{#2}) }
 }
+\NewDocumentCommand {\code} { m } { \texttt{#1} }
 % evaluate (eg derivative) at position
 \NewDocumentCommand {\atpos} { m m } { \bigg|_{{#1} = {#2}} } % use evalfun instead!
 \NewDocumentCommand {\evalfunI} {m m m} {\left.\kern-\nulldelimiterspace {#1} \right|_{{#2} = {#3}}}
@@ -56,6 +58,15 @@
 \NewDocumentCommand {\traAnco} {m} {#1 \rightarrow}
 \NewDocumentCommand {\traAlt} {m} {#1^* }
 \NewDocumentCommand {\traAltEq} {m} {{#1}^* = }
+
+\NewDocumentCommand {\einsteinSum} {m g} {
+    \iftoggle{EinsteinSumConvention}
+        {\IfNoValueTF{#2}
+            {}
+            {#2}}
+        {\IfNoValueTF{#2}
+            {\sum_{{#1}=1}^{3}}
+            {\sum_{{#1}=1}^{3} \left( {#2} \right)}}}
 % representation of similarity variables
 \NewDocumentCommand {\simvar} {m} {\widetilde{#1}}
 % averaging
@@ -543,8 +554,18 @@
     {\infGen{\text{Gal}}}
     {\infGen{{\text{Gal}_{{#1}}}}}
 }
-\NewDocumentCommand {\infGenRot} {} {\infGen{{\text{rot}_{\alpha}}}}
+\NewDocumentCommand {\infGenGalDiff} { g } {
+    \IfNoValueTF{#1} 
+    {\tilde{\infGen}_{\text{Gal}}}
+    {\tilde{\infGen}_{{\text{Gal}_{{#1}}}}}
+}
+\NewDocumentCommand {\infGenRot} { g }
+{\IfNoValueTF{#1}
+    {\infGen{{\text{rot}_{\alpha}}}}
+    {\infGen{{\text{rot}_{#1}}}}}
+
 \NewDocumentCommand {\infGenP} {} {\infGen{P}}
+\NewDocumentCommand {\infGenPDiff} {} {\tilde{\infGen}_{P}}
 \NewDocumentCommand {\infGenScI} {} {\infGen{\text{Sc},I}}
 \NewDocumentCommand {\infGenScII} {} {\infGen{\text{Sc},II}}
 \NewDocumentCommand {\infGenScNs} {} {\infGen{\text{Sc,ns}}}
@@ -608,7 +629,11 @@
         {\grp{\text{Gal}_{i}}}
         {\grp{\text{Gal}_{#1}}}
 }
-\NewDocumentCommand {\grpRot} {} {\grp{\text{rot}_{\alpha}}}
+\NewDocumentCommand {\grpRot} { g } {
+    \IfNoValueTF{#1}
+        {\grp{\text{rot}_{\alpha}}}
+        {\grp{\text{rot}_{#1}}}
+}
 \NewDocumentCommand {\grpP} {} {\grp{P}}
 \NewDocumentCommand {\grpScI} {} {\grp{\text{Sc},I}}
 \NewDocumentCommand {\grpScII} {} {\grp{\text{Sc},II}}
@@ -637,6 +662,7 @@
 \NewDocumentCommand{\ftGal} {m} {f_{\text{Gal}_{#1}} (t)}
 \NewDocumentCommand{\ftpGal} {m} {f_{\text{Gal}_{#1}}^{\prime} (t)}
 \NewDocumentCommand{\ftppGal} {m} {f_{\text{Gal}_{#1}}^{\prime\prime} (t)}
+\NewDocumentCommand{\ftpppGal} {m} {f_{\text{Gal}_{#1}}^{\prime\prime\prime} (t)}
 %for pressure translation
 \NewDocumentCommand{\ftP} { } {f_{P} (t)}
 \NewDocumentCommand{\ftpP} { } {f_{P}^{\prime} (t)}

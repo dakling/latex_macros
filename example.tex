@@ -22,26 +22,26 @@
     \pd{\um{i}}{t}
     + \um{j} \pd{\um{i}}{x_j}
     + \pd{\pm}{x_i}
-    - \nu \pd{\um{i}}{x_j}{2}
-    + \pd{\uf{i}{j}}{x_j}
+    - \nu \pd[2]{\um{i}}{x_j}
+    + \pd{\uf{ij}}{x_j}
     &= 0.
 \end{align} 
 \section{\(R_{ij}\) transport equation}
 \begin{align}
-\pd{\uf{i}{j}}{t}
+\pd{\uf{ij}}{t}
      \nonumber
-    + \um{k} \pd{\uf{i}{j}}{x_k}
-    + \uf{i}{k} \pd{\um{j}}{x_k}
-    + \uf{j}{k} \pd{\um{i}}{x_k}
+    + \um{k} \pd{\uf{ij}}{x_k}
+    + \uf{ik} \pd{\um{j}}{x_k}
+    + \uf{jk} \pd{\um{i}}{x_k}
     - \mean{\pf \left( \pd{\uf{i}}{x_j} + \pd{\uf{j}}{x_i} \right)}
     + 2 \nu \mean{ \pd{\uf{i}}{x_k} \pd{\uf{j}}{x_k} }
     \\
     \label{eq:reystress}
     + \pd{}{x_k}
     \left( 
-        \uf{i}{j}{k}
+        \uf{ijk}
         + \mean{(\delta_{jk} \uf{i} + \delta_{ik} \uf{j}) \pf}
-        - \nu \pd{\uf{i}{j}}{x_k}
+        - \nu \pd{\uf{ij}}{x_k}
     \right)
     =0.
 \end{align}    

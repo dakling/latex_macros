@@ -178,11 +178,14 @@
 \mean{\vv{u} \otimes \vv{u}}
 }
 
-\newcommand{\ufFirst} [1] { U_{#1} }
+\newcommand{\ufFirst} [1] { u_{#1} }
 \newcommand{\ufHigherShort} [1] {%
         {\iftoggle{OnePointExponent}
         {R^{(0)}_{#1}} 
         {R_{#1}}}
+        }
+\newcommand{\uftHigherShort} [1] {%
+        {R_{#1}}
         }
 
 \newcommand{\ufHigherLong} [1] {%
@@ -195,7 +198,13 @@
         {\ufHigherLong{#1}}}
         }
 
-\newcommand{\umFirst} [1] { U_{#1} }
+\newcommand{\uftHigher} [1] {%
+        {\iftoggle{ShortHigherMoments}
+        {\uftHigherShort{#1}} 
+        {\ufHigherLong{#1}}}
+        }
+
+\newcommand{\umFirst} [1] { \mean{U}_{#1} }
 \newcommand{\umHigherShort} [1] {%
         {\iftoggle{OnePointExponent}
         {H^{(0)}_{#1}} 
@@ -206,9 +215,23 @@
     \mean{\foreachletter{\ui}{}{#1}}
 }
 
+\newcommand{\umtHigherShort} [1] {%
+        {H_{#1}}
+        }
+
+\newcommand{\umtHigherLong} [1] {%
+    \mean{\foreachletter{\ui}{}{#1}}
+}
+
 \newcommand{\umHigher} [1] {%
         {\iftoggle{ShortHigherMoments}
         {\umHigherShort{#1}} 
+        {\umHigherLong{#1}}}
+        }
+
+\newcommand{\umtHigher} [1] {%
+        {\iftoggle{ShortHigherMoments}
+        {\umtHigherShort{#1}} 
         {\umHigherLong{#1}}}
         }
 
@@ -219,11 +242,23 @@
         {\ufFirst{#1}} %
         {\ufHigher{#1}} %
     }
+\newcommand{\uft} [1] {
+    \tl_set:Nn \l_tmpa_tl { #1 } % store argument in variable \l_tmpa_tl
+    \int_compare:nTF { \tl_count:N \l_tmpa_tl = 1 } % check if the argument only contains a single value
+        {\ufFirst{#1}} %
+        {\uftHigher{#1}} %
+    }
 \newcommand{\um} [1] {
     \tl_set:Nn \l_tmpa_tl { #1 } % store argument in variable \l_tmpa_tl
     \int_compare:nTF { \tl_count:N \l_tmpa_tl = 1 } % check if the argument only contains a single value
         {\umFirst{#1}} %
         {\umHigher{#1}} %
+    }
+\newcommand{\umt} [1] {
+    \tl_set:Nn \l_tmpa_tl { #1 } % store argument in variable \l_tmpa_tl
+    \int_compare:nTF { \tl_count:N \l_tmpa_tl = 1 } % check if the argument only contains a single value
+        {\umFirst{#1}} %
+        {\umtHigher{#1}} %
     }
 \ExplSyntaxOff
 \renewcommand{\pm}  {\mean{P}}
@@ -478,8 +513,8 @@
     {\hat{U}} 
     {\hat{U}_{#1}} 
 } 
-\newcommand{\pa} [1] { \hat{P} }
-\newcommand{\ka} [1] { \hat{k} }
+\newcommand{\pa}  { \hat{P} }
+\newcommand{\ka}  { \hat{k} }
 \newcommand{\ualpha} [1][] { 
     \MyIfEmptyTF{#1}
         {v} 
@@ -513,15 +548,15 @@
 }
 \newcommand{\infGenRot} [1][]
 {\MyIfEmptyTF{#1}
-    {\infGen{{\text{rot}_{\alpha}}}}
-    {\infGen{{\text{rot}_{#1}}}}}
+    {\infGen[{\text{rot}_{\alpha}}]}
+    {\infGen[{\text{rot}_{#1}}]}}
 
-\newcommand{\infGenP}  {\infGen{P}}
-\newcommand{\infGenPDiff}  {\tilde{\infGen}_{P}}
-\newcommand{\infGenScI}  {\infGen{\text{Sc},I}}
-\newcommand{\infGenScII}  {\infGen{\text{Sc},II}}
-\newcommand{\infGenScNs}  {\infGen{\text{Sc,ns}}}
-\newcommand{\infGenScStat}  {\infGen{\text{Sc,stat}}}
+\newcommand{\infGenP}  {\infGen[P]}
+\newcommand{\infGenPDiff}  {\tilde{\infGen}_[P]}
+\newcommand{\infGenScI}  {\infGen[\text{Sc},I]}
+\newcommand{\infGenScII}  {\infGen[\text{Sc},II]}
+\newcommand{\infGenScNs}  {\infGen[\text{Sc,ns}]}
+\newcommand{\infGenScStat}  {\infGen[\text{Sc,stat}]}
 \newcommand{\infGenTransStat} [1] {X_{{\text{Tr,stat,{#1}}}}}
 \newcommand{\infGenTransStatI} [1][] {%
     \MyIfEmptyTF{#1}
@@ -624,11 +659,11 @@
 \newcommand{ \model } [1] {\mathcal{M}_{#1}}
 
 % integration constant
-% \newcommand{ \intconst } [2][] {
-% \MyIfEmptyTF{#1}
-%   {c_{#2}}
-%   {c_{{#2}\_{#1}}}
-% }
+\newcommand{\intconst}[2][]{%
+\MyIfEmptyTF{#1}
+  {c_{#2}}
+  {c_{{#2}_{#1}}}
+}
 
 % jet stuff
 \newcommand{ \ucenterline }  {U_{s}}

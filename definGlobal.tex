@@ -6,6 +6,43 @@
 \usepackage[noabbrev]{cleveref}
 \usepackage{xifthen}
 
+\makeatletter
+\newcommand{\MyIfEmptyTF}[1]{%
+  \if\relax\detokenize{#1}\relax%
+    \expandafter\@firstoftwo%
+  \else%
+    \expandafter\@secondoftwo%
+  \fi
+  }
+
+\newcommand*\foreachletter[2]{%
+        \begingroup
+        \let\templettercommand#1%
+        \let\tempspacecommand#2%
+        \catcode
+        \foreachlettergo
+}
+\def\foreachlettergo#1{%
+        \testletter#1\relax
+        \endgroup
+}
+\def\testletter#1#2\relax{%
+        \if#1\otherspace
+                \tempspacecommand
+        \else
+                \templettercommand{#1}%
+        \fi
+        \ifx\relax#2\relax
+                \let\next\relax
+        \else
+                \let\next\testletter
+        \fi
+        \next#2\relax
+}\catcode`\ 12
+\def\otherspace{ }%
+\catcode`\ 10
+\makeatother
+
 % Default settings for all available options
 \newtoggle{EinsteinNotationDiff} % affects second derivatives
 \newtoggle{ShortHigherMoments} % abbreviate higher one-point velocity moments
@@ -23,663 +60,579 @@
 \newcommand\donumber{\addtocounter{equation}{1}\tag{\theequation}}
 %% low-level macros
 % definition of a good looking bar
-\NewDocumentCommand {\overbar} { m } {\mkern 1.5mu\overline{\mkern-1.5mu#1\mkern-1.5mu}\mkern 1.5mu}
+\newcommand{\overbar} [ 1 ] {\mkern 1.5mu\overline{\mkern-1.5mu{#1}\mkern-1.5mu}\mkern 1.5mu}
+% \newcommand{\overbar} [ 1 ] {\widebar{#1}}
 
 %% semantic macros
 % real numbers
-\NewDocumentCommand {\real} { o } { 
-    \IfNoValueTF{#1}
+\newcommand{\real} [ 1 ] { 
+    \MyIfEmptyTF{#1}
         {\mathbb{R} }
-        {\mathbb{R}^{#1} }}
+        {\mathbb{R}^{#1} }
+        }
 % symbols to denote entire equations
-\NewDocumentCommand {\nc} { m } { \mathcal{N}_{#1} }
-\NewDocumentCommand {\ncm} { m } { \mean{\mathcal{N}_{#1}} }
-\NewDocumentCommand {\ncf} { m } { \mathcal{N}_{#1}' }
+\newcommand{\nc} [ 1 ] { \mathcal{N}_{#1} }
+\newcommand{\ncm} [ 1 ] { \mean{\mathcal{N}_{#1}} }
+\newcommand{\ncf} [ 1 ] { \mathcal{N}_{#1}' }
 % generic vector/tensor
-\NewDocumentCommand{\vv} { m } { \mathbf{#1} }
-\NewDocumentCommand{\xv} {  } { \vv{x} }
-\NewDocumentCommand{\yv} {  } { \vv{y} }
-\NewDocumentCommand{\te} { m } { \mathbf{#1} }
-\NewDocumentCommand{\xt} {  } { \te{x} }
-\NewDocumentCommand{\yt} {  } { \te{y} }
+\newcommand{\vv}[ 1 ]{ \mathbf{#1} }
+\newcommand{\xv}{ \vv{x} }
+\newcommand{\yv}{ \vv{y} }
+\newcommand{\te}[1]{ \mathbf{#1} }
+\newcommand{\xt}{ \te{x} }
+\newcommand{\yt}{ \te{y} }
 % "order of" symbol
-\NewDocumentCommand {\order} { m g } { 
-    \IfNoValueTF{#2}
+\newcommand{\order} [2] { 
+    \MyIfEmptyTF{#2}
     {\textit{O}(#1) }
     {\textit{O}({#1}^{#2}) }
 }
-\NewDocumentCommand {\code} { m } { \texttt{#1} }
+\newcommand{\code} [ 1 ] { \texttt{#1} }
 % evaluate (eg derivative) at position
-\NewDocumentCommand {\atpos} { m m } { \bigg|_{{#1} = {#2}} } % use evalfun instead!
-\NewDocumentCommand {\evalfunI} {m m m} {\left.\kern-\nulldelimiterspace {#1} \right|_{{#2} = {#3}}}
-\NewDocumentCommand {\evalfun} {m m m} {\left. #1 \right|_{{#2} = {#3}}}
+\newcommand{\atpos} [2] { \bigg|_{{#1} = {#2}} } % use evalfun instead!
+\newcommand{\evalfunI} [3] {\left.\kern-\nulldelimiterspace {#1} \right|_{{#2} = {#3}}}
+\newcommand{\evalfun} [3] {\left. #1 \right|_{{#2} = {#3}}}
 % transformed (symmetries)
-\NewDocumentCommand {\tra} {m} {\traAltEq{#1}}
-\NewDocumentCommand {\traAnco} {m} {#1 \rightarrow}
-\NewDocumentCommand {\traAlt} {m} {#1^* }
-\NewDocumentCommand {\traAltEq} {m} {{#1}^* = }
+\newcommand{\tra} [1] {\traAltEq{#1}}
+\newcommand{\traAnco} [1] {#1 \rightarrow}
+\newcommand{\traAlt} [1] {#1^* }
+\newcommand{\traAltEq} [1] {{#1}^* = }
 
-\NewDocumentCommand {\einsteinSum} {m g} {
+\newcommand{\einsteinSum} [2][] {
     \iftoggle{EinsteinSumConvention}
-        {\IfNoValueTF{#2}
+        {\MyIfEmptyTF{#1}
             {}
-            {#2}}
-        {\IfNoValueTF{#2}
-            {\sum_{{#1}=1}^{3}}
-            {\sum_{{#1}=1}^{3} \left( {#2} \right)}}}
+            \else
+            {#1}
+            \fi}
+        {\MyIfEmptyTF{#1}
+            {\sum_{{#2}=1}^{3}}
+            {\sum_{{#2}=1}^{3} \left( {#1} \right)}}}
 % representation of similarity variables
-\NewDocumentCommand {\simvar} {m} {\widetilde{#1}}
+\newcommand{\simvar} [1] {\widetilde{#1}}
 % averaging
 \ExplSyntaxOn
-\NewDocumentCommand {\mean} { m } {
+\newcommand{\mean} [1] {
     \tl_set:Nn \l_tmpa_tl { #1 } % store argument in variable \l_tmpa_tl
     \int_compare:nTF { \tl_count:N \l_tmpa_tl = 1 } % check if the argument only contains a single value
         { \bar{#1} } % if there is only one letter, use the bar macro
         { \overline{#1}} % otherwise use the longer overline
     }
 % derivatives
-\NewDocumentCommand {\diffGeneric} { m m m g } {
-    \IfNoValueTF {#4}
-        { \cfrac{#3 #1}{#3 #2} }
-        {\int_compare:nTF{ #4=2 } % second derivatives in Einstein notation
+\newcommand{\diffGeneric}[4][]{
+    \MyIfEmptyTF{#1}
+        { \cfrac{#4 #2}{#4 #3} }
+        { \int_compare:nTF{ #1=2 } % second derivatives in Einstein notation
             {\iftoggle{EinsteinNotationDiff} % check if option is enabled
-                {\cfrac{#3^{#4} #1}{#3 #2 #3 #2} }
-                {\cfrac{#3^{#4} #1}{#3 #2^{#4}} }
+                {\cfrac{#4^{#1} #2}{#4 #3 #4 #3} }
+                {\cfrac{#4^{#1} #2}{#4 #2^{#3}} }
             } 
-            {{\cfrac{#3^{#4} #1}{#3 #2 ^{#4}}}} % higher derivatives, Einstein notation won't make sense in general
+            {{\cfrac{#4^{#1} #2}{#4 #3 ^{#1}}}} % higher derivatives, Einstein notation won't make sense in general
         }
 }
 \ExplSyntaxOff
 % total derivative
-\NewDocumentCommand {\dd} { m m g } { \diffGeneric{#1}{#2}{d}{#3} }
+\newcommand{\dd} [3][] { \diffGeneric[#1]{#2}{#3}{d} }
 % partial derivative
-\NewDocumentCommand {\pd} { m m g } { \diffGeneric{#1}{#2}{\partial}{#3} }
+\newcommand{\pd} [3][] { \diffGeneric[#1]{#2}{#3}{\partial} }
 % material derivative
-\NewDocumentCommand {\md} { m m g } { \diffGeneric{#1}{#2}{D}{#3} }
+\newcommand{\md} [3][] { \diffGeneric[#1]{#2}{#3}{D} }
 % derivatives without frac 
-\NewDocumentCommand {\diffInline} { m m m  } { {#3 #1}/{#3 #2} }
-\NewDocumentCommand {\did} { m m  } { \diffInline{#1}{#2}{d} }
-\NewDocumentCommand {\pdi} { m m  } { \diffInline{#1}{#2}{\partial} }
-\NewDocumentCommand {\mdi} { m m  } { \diffInline{#1}{#2}{D} }
+\newcommand{\diffInline} [3] { {#3 #1}/{#3 #2} }
+\newcommand{\did} [2] { \diffInline{#1}{#2}{d} }
+\newcommand{\pdi} [2] { \diffInline{#1}{#2}{\partial} }
+\newcommand{\mdi} [2] { \diffInline{#1}{#2}{D} }
 % jet derivative
-% \NewDocumentCommand {\jd} { m m  } { \underset{#2}{#1} }
-% \NewDocumentCommand {\jd} { m m  } { {#1}_{{\!,{#2}}} }
-\NewDocumentCommand {\jd} { m m  } { {#1}{}_{{\!,{#2}}} }
+% \newcommand{\jd} [2] { \underset{#2}{#1} }
+% \newcommand{\jd} [2] { {#1}_{{\!,{#2}}} }
+\newcommand{\jd} [2] { {#1}{}_{{\!,{#2}}} }
 
 % for a long first arg it is nicer to write d/dx(z+longArg)
-\NewDocumentCommand{\diffLongGeneric} {m m m g} {\diffGeneric{}{#2}{#3}{#4}{#1}}
-\NewDocumentCommand {\ddl} {m m g} { \diffLongGeneric{#1}{#2}{d}{#3} }
-\NewDocumentCommand {\pdl} {m m g} { \diffLongGeneric{#1}{#2}{\partial}{#3} }
-\NewDocumentCommand {\mdl} {m m g} { \diffLongGeneric{#1}{#2}{D}{#3} }
+\newcommand{\diffLongGeneric} [4] {\diffGeneric{}{#2}{#3}{#4}{#1}}
+\newcommand{\ddl} [3] { \diffLongGeneric{#1}{#2}{d}{#3} }
+\newcommand{\pdl} [3] { \diffLongGeneric{#1}{#2}{\partial}{#3} }
+\newcommand{\mdl} [3] { \diffLongGeneric{#1}{#2}{D}{#3} }
 
-\NewDocumentCommand {\diffSecond} { m m m m } {
+\newcommand{\diffSecond} [4] {
     \cfrac{{#1} ^2 {#2}}{{#1} {#3} {#1} {#4}}
 }
 % total derivative
-\NewDocumentCommand {\ddSecond} { m m m } { \diffSecond{d}{#1}{#2}{#3} }
+\newcommand{\ddSecond} [3] { \diffSecond{d}{#1}{#2}{#3} }
 % partial derivative
-\NewDocumentCommand {\pdSecond} { m m m } { \diffSecond{\partial}{#1}{#2}{#3} }
+\newcommand{\pdSecond} [3] { \diffSecond{\partial}{#1}{#2}{#3} }
 % material derivative
-\NewDocumentCommand {\mdSecond} { m m m } { \diffSecond{D}{#1}{#2}{#3} }
+\newcommand{\mdSecond} [3] { \diffSecond{D}{#1}{#2}{#3} }
 
 
 % velocity moments
-\NewDocumentCommand {\umv} {} {
+\newcommand{\ui}[1]{U_{#1}} % unaveraged velocity
+\newcommand{\uif}[1]{u_{#1}} % unaveraged fluctuating velocity
+
+\newcommand{\umv}  {
 \bar{\vv{U}}
 }
-\NewDocumentCommand {\uav} {} {
+\newcommand{\uav}  {
 \hat{\vv{U}}
 }
-\NewDocumentCommand {\ufv} {} {
+\newcommand{\ufv}  {
 \mean{\vv{u} \otimes \vv{u}}
 }
 
-\NewDocumentCommand {\um} {g g g g} {
-    \iftoggle{OnePointExponent}
-    {
-        \iftoggle{ShortHigherMoments}
-        {\umShort{#1}{#2}{#3}{#4} }
-        {\umLong{#1}{#2}{#3}{#4} }
-    }
-    {
-        \iftoggle{ShortHigherMoments}
-        {\umShortNoExp{#1}{#2}{#3}{#4} }
-        {\umLongNoExp{#1}{#2}{#3}{#4} }
-    }
-}
-\NewDocumentCommand {\umShortNoExp} {g g g g} {
-    \IfNoValueTF{#1}
-        {{ \mean{U} }}
-        {\IfNoValueTF{#2}
-            {{\mean{U}_{#1}}}
-            { \IfNoValueTF{#3} 
-                {H_{{#1} {#2}}}
-                { \IfNoValueTF{#4}
-                    {{H_{{#1} {#2} {#3}}}}
-                {{H_{{#1} {#2} {#3} {#4}}}}
-            }
+\newcommand{\ufFirst} [1] { U_{#1} }
+\newcommand{\ufHigherShort} [1] {%
+        {\iftoggle{OnePointExponent}
+        {R^{(0)}_{#1}} 
+        {R_{#1}}}
         }
-    }
-}
-\NewDocumentCommand {\umLongNoExp} {g g g g} {
-    \IfNoValueTF{#1}
-        {{ \mean{U} }}
-        {\IfNoValueTF{#2}
-            {{\mean{U}_{#1}}}
-            { \IfNoValueTF{#3} 
-                {\mean{U_{#1} U_{#2}}}
-                { \IfNoValueTF{#4}
-                  {\mean{U_{#1} U_{#2} U_{#3}}}
-                {\mean{U_{#1} U_{#2} U_{#3} U_#4}}
-            }
-        }
-    }
+
+\newcommand{\ufHigherLong} [1] {%
+    \mean{\foreachletter{\uif}{}{#1}}
 }
 
-\NewDocumentCommand {\umShort} {g g g g} {
-    \IfNoValueTF{#1}
-        {{ \mean{U} }}
-        {\IfNoValueTF{#2}
-            {{\mean{U}_{#1}}}
-            { \IfNoValueTF{#3} 
-                {H_{{#1} {#2}}^{(0)}}
-                { \IfNoValueTF{#4}
-                    {H_{{#1} {#2} {#3}}^{(0)}}
-                {H_{{#1} {#2} {#3} {#4}}^{(0)}}
-            }
+\newcommand{\ufHigher} [1] {%
+        {\iftoggle{ShortHigherMoments}
+        {\ufHigherShort{#1}} 
+        {\ufHigherLong{#1}}}
         }
-    }
-}
-\NewDocumentCommand {\umLong} {g g g g} {
-    \IfNoValueTF{#1}
-    { \umShort }
-        {\IfNoValueTF{#2}
-            {\umShort{#1}}
-            { \IfNoValueTF{#3} 
-                { \mean{ U_{#1} U_{#2} } }
-                { \IfNoValueTF{#4}
-                    {\mean{ U_{#1} U_{#2} U_{#3} }}
-                {\mean{ U_{#1} U_{#2} U_{#3} U_{#4} }}
-            } 
+
+\newcommand{\umFirst} [1] { U_{#1} }
+\newcommand{\umHigherShort} [1] {%
+        {\iftoggle{OnePointExponent}
+        {H^{(0)}_{#1}} 
+        {H_{#1}}}
         }
-    }
-}
-\NewDocumentCommand {\uf} {g g g g} {
-    \iftoggle{OnePointExponent}
-    {
-        \iftoggle{ShortHigherMoments}
-        {\ufShort{#1}{#2}{#3}{#4} }
-        {\ufLong{#1}{#2}{#3}{#4} }
-    }
-    {
-        \iftoggle{ShortHigherMoments}
-        {\ufShortNoExp{#1}{#2}{#3}{#4} }
-        {\ufLongNoExp{#1}{#2}{#3}{#4} }
-    }
-}
-\NewDocumentCommand {\ufShortNoExp} {g g g g} {
-    \IfNoValueTF{#1}
-        { u }
-        {\IfNoValueTF{#2}
-            {{u_{#1}}}
-            { \IfNoValueTF{#3} 
-                {{R_{{#1} {#2}}}}
-                { \IfNoValueTF{#4}
-                    {R_{{#1} {#2} {#3}}}
-                {{R_{{#1} {#2} {#3} {#4}}}}
-            }
-        }
-    }
+
+\newcommand{\umHigherLong} [1] {%
+    \mean{\foreachletter{\ui}{}{#1}}
 }
 
-\NewDocumentCommand {\ufLongNoExp} {g g g g} {
-    \IfNoValueTF{#1}
-        {{ u }}
-        {\IfNoValueTF{#2}
-            {{u_{#1}}}
-            { \IfNoValueTF{#3} 
-                {{\mean{u_{#1} u_{#2}}}}
-                { \IfNoValueTF{#4}
-                  {{\mean{u_{#1} u_{#2} u_{#3}}}}
-                {{\mean{u_{#1} u_{#2} u_{#3} u_#4}}}
-            }
+\newcommand{\umHigher} [1] {%
+        {\iftoggle{ShortHigherMoments}
+        {\umHigherShort{#1}} 
+        {\umHigherLong{#1}}}
         }
-    }
-}
 
-\NewDocumentCommand {\ufShort} {g g g g} {
-    \IfNoValueTF{#1}
-        {{ u }}
-        {\IfNoValueTF{#2}
-            {{u_{#1}}}
-            { \IfNoValueTF{#3} 
-                {{R_{{#1} {#2}}^{(0)}}}
-                { \IfNoValueTF{#4}
-                    {{R_{{#1} {#2} {#3}}^{(0)}}}
-                {{R_{{#1} {#2} {#3} {#4}}^{(0)}}}
-            }
-        }
-    }
-}
-\NewDocumentCommand {\ufLong} {g g g g} {
-    \IfNoValueTF{#1}
-        {{ \ufShort }}
-        {\IfNoValueTF{#2}
-            {{\ufShort{#1}}}
-            { \IfNoValueTF{#3} 
-                {{ \mean{ u_{#1} u_{#2} } }}
-                { \IfNoValueTF{#4}
-                    {{\mean{ u_{#1} u_{#2} u_{#3} }}}
-                {{\mean{ u_{#1} u_{#2} u_{#3} u_{#4} }}}
-            } 
-        }
-    }
-}
-\RenewDocumentCommand {\pm} {} {\mean{P}}
-\NewDocumentCommand {\pf} {} {p}
 \ExplSyntaxOn
-\NewDocumentCommand {\umTensor} { m } { 
+\newcommand{\uf} [1] {
+    \tl_set:Nn \l_tmpa_tl { #1 } % store argument in variable \l_tmpa_tl
+    \int_compare:nTF { \tl_count:N \l_tmpa_tl = 1 } % check if the argument only contains a single value
+        {\ufFirst{#1}} %
+        {\ufHigher{#1}} %
+    }
+\newcommand{\um} [1] {
+    \tl_set:Nn \l_tmpa_tl { #1 } % store argument in variable \l_tmpa_tl
+    \int_compare:nTF { \tl_count:N \l_tmpa_tl = 1 } % check if the argument only contains a single value
+        {\umFirst{#1}} %
+        {\umHigher{#1}} %
+    }
+\ExplSyntaxOff
+\renewcommand{\pm}  {\mean{P}}
+\newcommand{\pf}  {p}
+\ExplSyntaxOn
+\newcommand{\umTensor} [1] { 
     \int_compare:nTF { #1 = 1 } % 
     { \vv{\um} }
     { \vv{H^0} }
 }
-\NewDocumentCommand {\ufTensor} { m } { 
+\newcommand{\ufTensor} [1] { 
     \int_compare:nTF { #1 = 1 } % 
     { \vv{\uf} }
     { \vv{R^0} }
 }
-\NewDocumentCommand {\umTensorTwoPt} { m } { 
+\newcommand{\umTensorTwoPt} [1] { 
     \int_compare:nTF { #1 = 1 } % 
     { \vv{\um} }
     { \vv{H} }
 }
-\NewDocumentCommand {\ufTensorTwoPt} { m } { 
+\newcommand{\ufTensorTwoPt} [1] { 
     \int_compare:nTF { #1 = 1 } % 
     { \vv{\uf} }
     { \vv{R} }
 }
 \ExplSyntaxOff
-\NewDocumentCommand {\pum} { m } {
+\newcommand{\pum} [1] {
         \mean{PU_{#1}}^{(0)}
         % {\mean{PU_{#1}}(\vv{#2},\vv{#3})}
 }
-\NewDocumentCommand {\upm} { m } {
+\newcommand{\upm} [1] {
         \mean{U_{#1}P}^{(0)}
         % {\mean{U_{#1}P}(\vv{#2},\vv{#3})}
 }
-\NewDocumentCommand {\umpx} { m m } {
+\newcommand{\umpx} [2] {
     \mean{U_{#1} \jd{P}{x_{#2}}}^{(0)}
         % {\mean{U_{#1}P}(\vv{#2},\vv{#3})}
 }
-\NewDocumentCommand {\puf} { m } {
+\newcommand{\puf} [1] {
         \mean{pu_{#1}}^{(0)}
         % {\mean{pu_{#1}}(\vv{#2},\vv{#3})}
 }
-\NewDocumentCommand {\upf} { m } {
+\newcommand{\upf} [1] {
         \mean{u_{#1}p}^{(0)}
         % {\mean{u_{#1}p}(\vv{#2},\vv{#3})}
 }
 % two-point correlations
 % instantaneous approach
-\NewDocumentCommand {\umtWithoutArgsShort} {g g g g o o o o} {
-    \IfNoValueTF{#1}
-            { \um }
-            {\IfNoValueTF{#2}
-                % {\um{#1} }
-                {\um{#1}(\vv{#5}) }% always show argument for single variable
-                { \IfNoValueTF{#3} 
-                    {H_{#1 #2} }
-                    { \IfNoValueTF{#4}
-                        {H_{#1 #2 #3} }
-                    {H_{#1 #2 #3 #4} }
-                }
-            }
-        }
-     }
-\NewDocumentCommand {\umtWithArgsShort} {g g g g o o o o} {
-        \IfNoValueTF{#1}
-            { \um(\vv{#5}) }
-            {\IfNoValueTF{#2}
-                {\um{#1}(\vv{#5}) }
-                { \IfNoValueTF{#3} 
-                    {H_{#1 #2}(\vv{#5},\vv{#6}) }
-                    { \IfNoValueTF{#4}
-                        {H_{#1 #2 #3}(\vv{#5}, \vv{#6}, \vv{#7}) }
-                        {H_{#1 #2 #3 #4}(\vv{#5}, \vv{#6}, \vv{#7}, \vv{#8}) }
-                }
-            }
-        }
- }
-\NewDocumentCommand {\umtShort} {g g g g o o o o} { 
-    \IfNoValueTF{#5}
-    { \umtWithoutArgsShort{#1}{#2}{#3}{#4}[#5][#6][#7][#8] }
-    { \iftoggle{ShowArgsTwoPoint}
-        { \umtWithArgsShort{#1}{#2}{#3}{#4}[#5][#6][#7][#8] }
-        { \umtWithoutArgsShort{#1}{#2}{#3}{#4}[#5][#6][#7][#8] }
-    }
-}
-\NewDocumentCommand {\umtWithoutArgsLong} {g g g g o o o o} {
-    \IfNoValueTF{#1}
-            { \um }
-            {\IfNoValueTF{#2}
-                {\um{#1} }
-                {\um{#1}(\vv{#5}) }% always show argument for single variable
-                { \IfNoValueTF{#3} 
-                    { \mean{ U_{#1} U_{#2} } }
-                    { \IfNoValueTF{#4}
-                        { \mean{U_{#1} U_{#2} U_{#3}} }
-                        { \mean{U_{#1} U_{#2} U_{#3} U_{#4}} }
-                }
-            }
-        }
-     }
-\NewDocumentCommand {\umtWithArgsLong} {g g g g o o o o} {
-        \IfNoValueTF{#1}
-            { \um(\vv{#5}) }
-            {\IfNoValueTF{#2}
-                {\um{#1}(\vv{#5}) }
-                { \IfNoValueTF{#3} 
-                    { \mean{ U_{#1}(\vv{#5}) U_{#2}(\vv{#6})} }
-                    { \IfNoValueTF{#4}
-                        { \mean{ U_{#1}(\vv{#5}) U_{#2}(\vv{#6}) U_{#3}(\vv{#7})} }
-                        { \mean{ U_{#1}(\vv{#5}) U_{#2}(\vv{#6}) U_{#3}(\vv{#7}) U_{#4}(\vv{#8})} }
-                }
-            }
-        }
- }
-\NewDocumentCommand {\umtLong} {g g g g o o o o} { 
-    \IfNoValueTF{#5}
-    { \umtWithoutArgsLong{#1}{#2}{#3}{#4}[#5][#6][#7][#8] }
-    { \iftoggle{ShowArgsTwoPoint}
-        { \umtWithArgsLong{#1}{#2}{#3}{#4}[#5][#6][#7][#8] }
-        { \umtWithoutArgsLong{#1}{#2}{#3}{#4}[#5][#6][#7][#8] }
-    }
-}
- \NewDocumentCommand {\umt} {g g g g o o o o} { 
-     \iftoggle{ShortHigherMoments}
-     {\umtShort{#1}{#2}{#3}{#4}[#5][#6][#7][#8]}
-     {\umtLong{#1}{#2}{#3}{#4}[#5][#6][#7][#8]}
- }
-% fluctuation approach
-\NewDocumentCommand {\uftWithoutArgsShort} {g g g g} {
-    \IfNoValueTF{#1}
-            { \uf }
-            {\IfNoValueTF{#2}
-                {\uf{#1} }
-                { \IfNoValueTF{#3} 
-                    {R_{#1 #2} }
-                    { \IfNoValueTF{#4}
-                        {R_{#1 #2 #3} }
-                    {R_{#1 #2 #3 #4} }
-                }
-            }
-        }
-     }
-\NewDocumentCommand {\uftWithArgsShort} {g g g g o o o o} {
-        \IfNoValueTF{#1}
-            { \uf(\vv{#5}) }
-            {\IfNoValueTF{#2}
-                {\uf{#1}(\vv{#5}) }
-                { \IfNoValueTF{#3} 
-                    {R_{#1 #2}(\vv{#5},\vv{#6}) }
-                    { \IfNoValueTF{#4}
-                        {R_{#1 #2 #3}(\vv{#5}, \vv{#6}, \vv{#7}) }
-                        {R_{#1 #2 #3 #4}(\vv{#5}, \vv{#6}, \vv{#7}, \vv{#8}) }
-                }
-            }
-        }
- }
-\NewDocumentCommand {\uftShort} {g g g g o o o o} { 
-    \IfNoValueTF{#5}
-    { \uftWithoutArgsShort{#1}{#2}{#3}{#4} }
-    { \iftoggle{ShowArgsTwoPoint}
-        { \uftWithArgsShort{#1}{#2}{#3}{#4}[#5][#6][#7][#8] }
-        { \uftWithoutArgsShort{#1}{#2}{#3}{#4} }
-    }
-}
-\NewDocumentCommand {\uftWithoutArgsLong} {g g g g} {
-    \IfNoValueTF{#1}
-            { \uf }
-            {\IfNoValueTF{#2}
-                {\uf{#1} }
-                { \IfNoValueTF{#3} 
-                    { \mean{ u_{#1} u_{#2} } }
-                    { \IfNoValueTF{#4}
-                        { \mean{U_{#1} u_{#2} u_{#3}} }
-                        { \mean{U_{#1} u_{#2} u_{#3} u_{#4}} }
-                }
-            }
-        }
-     }
-\NewDocumentCommand {\uftWithArgsLong} {g g g g o o o o} {
-        \IfNoValueTF{#1}
-            { \uf(\vv{#5}) }
-            {\IfNoValueTF{#2}
-                {\uf{#1}(\vv{#5}) }
-                { \IfNoValueTF{#3} 
-                    { \mean{ u_{#1}(\vv{#5}) u_{#2}(\vv{#6})} }
-                    { \IfNoValueTF{#4}
-                        { \mean{ u_{#1}(\vv{#5}) u_{#2}(\vv{#6}) u_{#3}(\vv{#7})} }
-                        { \mean{ u_{#1}(\vv{#5}) u_{#2}(\vv{#6}) u_{#3}(\vv{#7}) u_{#4}(\vv{#8})} }
-                }
-            }
-        }
- }
-\NewDocumentCommand {\uftLong} {g g g g o o o o} { 
-    \IfNoValueTF{#5}
-    { \uftWithoutArgsLong{#1}{#2}{#3}{#4} }
-    { \iftoggle{ShowArgsTwoPoint}
-        { \uftWithArgsLong{#1}{#2}{#3}{#4}[#5][#6][#7][#8] }
-        { \uftWithoutArgsLong{#1}{#2}{#3}{#4} }
-    }
-}
- \NewDocumentCommand {\uft} {g g g g o o o o} { 
-     \iftoggle{ShortHigherMoments}
-     {\uftShort{#1}{#2}{#3}{#4}[#5][#6][#7][#8]}
-     {\uftLong{#1}{#2}{#3}{#4}[#5][#6][#7][#8]}
- }
-\NewDocumentCommand {\puft} { m o o } {
-    \IfNoValueTF{#2}
-        {\mean{pu_{#1}}}
-        {\mean{pu_{#1}}}
+% \newcommand{\umtWithoutArgsShort} [8] {
+%     \MyIfEmptyTF{#1}
+%             { \um }
+%             {\MyIfEmptyTF{#2}
+%                 % {\um{#1} }
+%                 {\um{#1}(\vv{#5}) }% always show argument for single variable
+%                 { \MyIfEmptyTF{#3} 
+%                     {H_{#1 #2} }
+%                     { \MyIfEmptyTF{#4}
+%                         {H_{#1 #2 #3} }
+%                     {H_{#1 #2 #3 #4} }
+%                 }
+%             }
+%         }
+%      }
+% \newcommand{\umtWithArgsShort} [8] {
+%         \MyIfEmptyTF{#1}
+%             { \um(\vv{#5}) }
+%             {\MyIfEmptyTF{#2}
+%                 {\um{#1}(\vv{#5}) }
+%                 { \MyIfEmptyTF{#3} 
+%                     {H_{#1 #2}(\vv{#5},\vv{#6}) }
+%                     { \MyIfEmptyTF{#4}
+%                         {H_{#1 #2 #3}(\vv{#5}, \vv{#6}, \vv{#7}) }
+%                         {H_{#1 #2 #3 #4}(\vv{#5}, \vv{#6}, \vv{#7}, \vv{#8}) }
+%                 }
+%             }
+%         }
+%  }
+% \newcommand{\umtShort} [8] { 
+%     \MyIfEmptyTF{#5}
+%     { \umtWithoutArgsShort{#1}{#2}{#3}{#4}[#5][#6][#7][#8] }
+%     { \iftoggle{ShowArgsTwoPoint}
+%         { \umtWithArgsShort{#1}{#2}{#3}{#4}[#5][#6][#7][#8] }
+%         { \umtWithoutArgsShort{#1}{#2}{#3}{#4}[#5][#6][#7][#8] }
+%     }
+% }
+% \newcommand{\umtWithoutArgsLong} [8] {
+%     \MyIfEmptyTF{#1}
+%             { \um }
+%             {\MyIfEmptyTF{#2}
+%                 {\um{#1} }
+%                 {\um{#1}(\vv{#5}) }% always show argument for single variable
+%                 { \MyIfEmptyTF{#3} 
+%                     { \mean{ U_{#1} U_{#2} } }
+%                     { \MyIfEmptyTF{#4}
+%                         { \mean{U_{#1} U_{#2} U_{#3}} }
+%                         { \mean{U_{#1} U_{#2} U_{#3} U_{#4}} }
+%                 }
+%             }
+%         }
+%      }
+% \newcommand{\umtWithArgsLong} [8] {
+%         \MyIfEmptyTF{#1}
+%             { \um(\vv{#5}) }
+%             {\MyIfEmptyTF{#2}
+%                 {\um{#1}(\vv{#5}) }
+%                 { \MyIfEmptyTF{#3} 
+%                     { \mean{ U_{#1}(\vv{#5}) U_{#2}(\vv{#6})} }
+%                     { \MyIfEmptyTF{#4}
+%                         { \mean{ U_{#1}(\vv{#5}) U_{#2}(\vv{#6}) U_{#3}(\vv{#7})} }
+%                         { \mean{ U_{#1}(\vv{#5}) U_{#2}(\vv{#6}) U_{#3}(\vv{#7}) U_{#4}(\vv{#8})} }
+%                 }
+%             }
+%         }
+%  }
+% \newcommand{\umtLong} [8] { 
+%     \MyIfEmptyTF{#5}
+%     { \umtWithoutArgsLong{#1}{#2}{#3}{#4}[#5][#6][#7][#8] }
+%     { \iftoggle{ShowArgsTwoPoint}
+%         { \umtWithArgsLong{#1}{#2}{#3}{#4}[#5][#6][#7][#8] }
+%         { \umtWithoutArgsLong{#1}{#2}{#3}{#4}[#5][#6][#7][#8] }
+%     }
+% }
+%  \newcommand{\umt} [8] { 
+%      \iftoggle{ShortHigherMoments}
+%      {\umtShort{#1}{#2}{#3}{#4}[#5][#6][#7][#8]}
+%      {\umtLong{#1}{#2}{#3}{#4}[#5][#6][#7][#8]}
+%  }
+% % fluctuation approach
+% \newcommand{\uftWithoutArgsShort} [4] {
+%     \MyIfEmptyTF{#1}
+%             { \uf }
+%             {\MyIfEmptyTF{#2}
+%                 {\uf{#1} }
+%                 { \MyIfEmptyTF{#3} 
+%                     {R_{#1 #2} }
+%                     { \MyIfEmptyTF{#4}
+%                         {R_{#1 #2 #3} }
+%                     {R_{#1 #2 #3 #4} }
+%                 }
+%             }
+%         }
+%      }
+% \newcommand{\uftWithArgsShort} [8] {
+%         \MyIfEmptyTF{#1}
+%             { \uf(\vv{#5}) }
+%             {\MyIfEmptyTF{#2}
+%                 {\uf{#1}(\vv{#5}) }
+%                 { \MyIfEmptyTF{#3} 
+%                     {R_{#1 #2}(\vv{#5},\vv{#6}) }
+%                     { \MyIfEmptyTF{#4}
+%                         {R_{#1 #2 #3}(\vv{#5}, \vv{#6}, \vv{#7}) }
+%                         {R_{#1 #2 #3 #4}(\vv{#5}, \vv{#6}, \vv{#7}, \vv{#8}) }
+%                 }
+%             }
+%         }
+%  }
+% \newcommand{\uftShort} [8] { 
+%     \MyIfEmptyTF{#5}
+%     { \uftWithoutArgsShort{#1}{#2}{#3}{#4} }
+%     { \iftoggle{ShowArgsTwoPoint}
+%         { \uftWithArgsShort{#1}{#2}{#3}{#4}[#5][#6][#7][#8] }
+%         { \uftWithoutArgsShort{#1}{#2}{#3}{#4} }
+%     }
+% }
+% \newcommand{\uftWithoutArgsLong} [4] {
+%     \MyIfEmptyTF{#1}
+%             { \uf }
+%             {\MyIfEmptyTF{#2}
+%                 {\uf{#1} }
+%                 { \MyIfEmptyTF{#3} 
+%                     { \mean{ u_{#1} u_{#2} } }
+%                     { \MyIfEmptyTF{#4}
+%                         { \mean{U_{#1} u_{#2} u_{#3}} }
+%                         { \mean{U_{#1} u_{#2} u_{#3} u_{#4}} }
+%                 }
+%             }
+%         }
+%      }
+% \newcommand{\uftWithArgsLong} [8] {
+%         \MyIfEmptyTF{#1}
+%             { \uf(\vv{#5}) }
+%             {\MyIfEmptyTF{#2}
+%                 {\uf{#1}(\vv{#5}) }
+%                 { \MyIfEmptyTF{#3} 
+%                     { \mean{ u_{#1}(\vv{#5}) u_{#2}(\vv{#6})} }
+%                     { \MyIfEmptyTF{#4}
+%                         { \mean{ u_{#1}(\vv{#5}) u_{#2}(\vv{#6}) u_{#3}(\vv{#7})} }
+%                         { \mean{ u_{#1}(\vv{#5}) u_{#2}(\vv{#6}) u_{#3}(\vv{#7}) u_{#4}(\vv{#8})} }
+%                 }
+%             }
+%         }
+%  }
+% \newcommand{\uftLong} [8] { 
+%     \MyIfEmptyTF{#5}
+%     { \uftWithoutArgsLong{#1}{#2}{#3}{#4} }
+%     { \iftoggle{ShowArgsTwoPoint}
+%         { \uftWithArgsLong{#1}{#2}{#3}{#4}[#5][#6][#7][#8] }
+%         { \uftWithoutArgsLong{#1}{#2}{#3}{#4} }
+%     }
+% }
+%  \newcommand{\uft} [8] { 
+%      \iftoggle{ShortHigherMoments}
+%      {\uftShort{#1}{#2}{#3}{#4}[#5][#6][#7][#8]}
+%      {\uftLong{#1}{#2}{#3}{#4}[#5][#6][#7][#8]}
+%  }
+\newcommand{\puft} [2][] {
+    \MyIfEmptyTF{#1}
+        {\mean{pu_{#2}}}
+        {\mean{pu_{#2}}}
         % {\mean{pu_{#1}}(\vv{#2},\vv{#3})}
 }
-\NewDocumentCommand {\upft} { m o o } {
-    \IfNoValueTF{#2}
-        {\mean{u_{#1}p}}
-        {\mean{u_{#1}p}}
+\newcommand{\upft} [2][] {
+    \MyIfEmptyTF{#1}
+        {\mean{u_{#2}p}}
+        {\mean{u_{#2}p}}
         % {\mean{u_{#1}p}(\vv{#2},\vv{#3})}
 }
-\NewDocumentCommand {\pumt} { m o o } {
-    \IfNoValueTF{#2}
-        {\mean{PU_{#1}}}
-        {\mean{PU_{#1}}}
+\newcommand{\pumt} [2][] {
+    \MyIfEmptyTF{#1}
+        {\mean{PU_{#2}}}
+        {\mean{PU_{#2}}}
         % {\mean{PU_{#1}}(\vv{#2},\vv{#3})}
 }
-\NewDocumentCommand {\upmt} { m o o } {
-    \IfNoValueTF{#2}
-        {\mean{U_{#1}P}}
-        {\mean{U_{#1}P}}
+\newcommand{\upmt} [2][] {
+    \MyIfEmptyTF{#1}
+        {\mean{U_{#2}P}}
+        {\mean{U_{#2}P}}
         % {\mean{U_{#1}P}(\vv{#2},\vv{#3})}
 }
 %LES
-\NewDocumentCommand{\ufilter} {g g g g} {
-    \IfNoValueTF{#1}
-        { \tilde{U} }
-        {\IfNoValueTF{#2}
-            {\tilde{U}_{#1}}
-            { \IfNoValueTF{#3} 
-                {\tau_{#1 #2}}
-                { \IfNoValueTF{#4}
-                    {\tau_{#1 #2 #3}}
-                {H_{#1 #2 #3 #4}}
-            }
-        }
-    }
-}
-\NewDocumentCommand{\pfilter} {} {\tilde{P}}
+% \newcommand{\ufilter} [4] {
+%     \MyIfEmptyTF{#1}
+%         { \tilde{U} }
+%         {\MyIfEmptyTF{#2}
+%             {\tilde{U}_{#1}}
+%             { \MyIfEmptyTF{#3} 
+%                 {\tau_{#1 #2}}
+%                 { \MyIfEmptyTF{#4}
+%                     {\tau_{#1 #2 #3}}
+%                 {H_{#1 #2 #3 #4}}
+%             }
+%         }
+%     }
+% }
+\newcommand{\pfilter}  {\tilde{P}}
 % turbulent viscosity
-% \NewDocumentCommand {\nut} {} {\nu_{\text{turb}}}
-\NewDocumentCommand {\nut} {} {\nu_{t}}
+% \newcommand{\nut}  {\nu_{\text{turb}}}
+\newcommand{\nut}  {\nu_{t}}
 % artificial velocity 
-\NewDocumentCommand {\ua} { g } { 
-    \IfNoValueTF{#1}
+\newcommand{\ua} [1][] { 
+    \MyIfEmptyTF{#1}
     {\hat{U}} 
     {\hat{U}_{#1}} 
 } 
-\NewDocumentCommand {\pa} { g } { \hat{P} }
-\NewDocumentCommand {\ka} { g } { \hat{k} }
-\ProvideDocumentCommand {\ualpha} { g } { 
-    \IfNoValueTF{#1}
+\newcommand{\pa} [1] { \hat{P} }
+\newcommand{\ka} [1] { \hat{k} }
+\newcommand{\ualpha} [1][] { 
+    \MyIfEmptyTF{#1}
         {v} 
         {v_{#1}} 
 } 
 % k- eps - model
-\NewDocumentCommand {\kepsmodel} {} {{\(k\)-\(\varepsilon\)-model}}
+\newcommand{\kepsmodel}  {{\(k\)-\(\varepsilon\)-model}}
 % k- omega - model
-\NewDocumentCommand {\komegamodel} {} {{\(k\)-\(\omega\)-model}}
+\newcommand{\komegamodel}  {{\(k\)-\(\omega\)-model}}
 %Symmetry generators
-\NewDocumentCommand {\infGen} { g } {
-    \IfNoValueTF{#1} {X}
+\newcommand{\infGen} [1][] {
+    \MyIfEmptyTF{#1}
+    {X}
         {X_{#1}}
     }
-    \NewDocumentCommand {\infGenT} {} {\infGen{t}}
-\NewDocumentCommand {\infGenX} { g } {
-    \IfNoValueTF{#1} 
-    {\infGen{x_i}}
-    {\infGen{x_{#1}}}
+    \newcommand{\infGenT}  {\infGen[t]}
+\newcommand{\infGenX} [1][] {
+    \MyIfEmptyTF{#1} 
+    {\infGen[x_i]}
+    {\infGen[x_{#1}]}
 }
-\NewDocumentCommand {\infGenGal} { g } {
-    \IfNoValueTF{#1} 
-    {\infGen{\text{Gal}}}
-    {\infGen{{\text{Gal}_{{#1}}}}}
+\newcommand{\infGenGal} [1][] {
+    \MyIfEmptyTF{#1} 
+    {\infGen[\text{Gal}]}
+    {\infGen[{\text{Gal}_{{#1}}}]}
 }
-\NewDocumentCommand {\infGenGalDiff} { g } {
-    \IfNoValueTF{#1} 
+\newcommand{\infGenGalDiff} [1][] {
+    \MyIfEmptyTF{#1} 
     {\tilde{\infGen}_{\text{Gal}}}
     {\tilde{\infGen}_{{\text{Gal}_{{#1}}}}}
 }
-\NewDocumentCommand {\infGenRot} { g }
-{\IfNoValueTF{#1}
+\newcommand{\infGenRot} [1][]
+{\MyIfEmptyTF{#1}
     {\infGen{{\text{rot}_{\alpha}}}}
     {\infGen{{\text{rot}_{#1}}}}}
 
-\NewDocumentCommand {\infGenP} {} {\infGen{P}}
-\NewDocumentCommand {\infGenPDiff} {} {\tilde{\infGen}_{P}}
-\NewDocumentCommand {\infGenScI} {} {\infGen{\text{Sc},I}}
-\NewDocumentCommand {\infGenScII} {} {\infGen{\text{Sc},II}}
-\NewDocumentCommand {\infGenScNs} {} {\infGen{\text{Sc,ns}}}
-\NewDocumentCommand {\infGenScStat} {} {\infGen{\text{Sc,stat}}}
-\NewDocumentCommand {\infGenTransStat} { m } {X_{{\text{Tr,stat,{#1}}}}}
-\NewDocumentCommand {\infGenTransStatI} { g } {%
-    \IfNoValueTF{#1}
+\newcommand{\infGenP}  {\infGen{P}}
+\newcommand{\infGenPDiff}  {\tilde{\infGen}_{P}}
+\newcommand{\infGenScI}  {\infGen{\text{Sc},I}}
+\newcommand{\infGenScII}  {\infGen{\text{Sc},II}}
+\newcommand{\infGenScNs}  {\infGen{\text{Sc,ns}}}
+\newcommand{\infGenScStat}  {\infGen{\text{Sc,stat}}}
+\newcommand{\infGenTransStat} [1] {X_{{\text{Tr,stat,{#1}}}}}
+\newcommand{\infGenTransStatI} [1][] {%
+    \MyIfEmptyTF{#1}
         {X_{\text{Tr,stat},I}}
         {X_{\text{Tr,stat},I, {#1} }}}
-\NewDocumentCommand {\infGenTransStatII} { g } {%
-    \IfNoValueTF{#1}
+\newcommand{\infGenTransStatII} [1][] {%
+    \MyIfEmptyTF{#1}
         {X_{\text{Tr,stat},II}}
         {X_{\text{Tr,stat},II, {#1} }}}
 %Global form
-\NewDocumentCommand {\gloSymm} { g } {
-    \IfNoValueTF{#1} {T}
-        {T_{#1}}
+\newcommand{\gloSymm} [1][] {
+    \MyIfEmptyTF{#1}
+    {T}
+    {T_{#1}}
 }
-\NewDocumentCommand {\gloSymmT} {} {\gloSymm{t}}
-\NewDocumentCommand {\gloSymmX} { g } {
-    \IfNoValueTF{#1}
-        {\gloSymm{x_i}}
-        {\gloSymm{x_{#1}}}
+\newcommand\gloSymmT{\gloSymm[t]}
+\newcommand{\gloSymmX} [1][] {
+    \MyIfEmptyTF{#1}
+        {\gloSymm[x_i]}
+        {\gloSymm[x_{#1}]}
 }
-\NewDocumentCommand {\gloSymmGal} { g } {
-    \IfNoValueTF{#1}
-        {\gloSymm{\text{Gal}_{i}}}
-        {\gloSymm{\text{Gal}_{#1}}}
+\newcommand{\gloSymmGal} [1][] {
+    \MyIfEmptyTF{#1}
+        {\gloSymm[\text{Gal}_{i}]}
+        {\gloSymm[\text{Gal}_{#1}]}
 }
-\NewDocumentCommand {\gloSymmRot} {} {\gloSymm{\text{rot}_{\alpha}}}
-\NewDocumentCommand {\gloSymmP} {} {\gloSymm{P}}
-\NewDocumentCommand {\gloSymmScI} {} {\gloSymm{\text{Sc},I}}
-\NewDocumentCommand {\gloSymmScII} {} {\gloSymm{\text{Sc},II}}
-\NewDocumentCommand {\gloSymmScNs} {} {\gloSymm{\text{Sc,ns}}}
-\NewDocumentCommand {\gloSymmScStat} {} {\gloSymm{\text{Sc,stat}}}
-\NewDocumentCommand {\gloSymmTransStat} { m } {T_{\text{Tr,stat,{#1}}}}
-\NewDocumentCommand {\gloSymmTransStatI} { g } {%
-    \IfNoValueTF{#1}
+\newcommand{\gloSymmRot}  {\gloSymm[\text{rot}_{\alpha}]}
+\newcommand{\gloSymmP}  {\gloSymm[P]}
+\newcommand{\gloSymmScI}  {\gloSymm[\text{Sc},I]}
+\newcommand{\gloSymmScII}  {\gloSymm[\text{Sc},II]}
+\newcommand{\gloSymmScNs}  {\gloSymm[\text{Sc,ns}]}
+\newcommand{\gloSymmScStat}  {\gloSymm[\text{Sc,stat}]}
+\newcommand{\gloSymmTransStat} [1][] {T_{\text{Tr,stat,{#1}}}}
+\newcommand{\gloSymmTransStatI} [1][] {%
+    \MyIfEmptyTF{#1}
         {T_{\text{Tr,stat},I}}
         {T_{\text{Tr,stat},I, {#1} }}}
-\NewDocumentCommand {\gloSymmTransStatII} { g } {%
-    \IfNoValueTF{#1}
+\newcommand{\gloSymmTransStatII} [1][] {%
+    \MyIfEmptyTF{#1}
         {T_{\text{Tr,stat},II}}
         {T_{\text{Tr,stat},II, {#1} }}}
 
-\NewDocumentCommand {\lagX} { m } {\xi_{#1}}
+\newcommand{\lagX} [1] {\xi_{#1}}
 % group parameter
-\NewDocumentCommand { \grp }{ g } { 
-    \IfNoValueTF{#1}
+\newcommand{\grp}[1][]{ 
+    \MyIfEmptyTF{#1}
     {a}
     {a_{#1}}
 }
-\NewDocumentCommand {\grpT} {} {\grp{T}}
-\NewDocumentCommand {\grpX} { g } {
-    \IfNoValueTF{#1}
-        {\grp{x_i}}
-        {\grp{x_{#1}}}
+\newcommand{\grpT}  {\grp[T]}
+\newcommand{\grpX} [1][] {
+    \MyIfEmptyTF{#1}
+        {\grp[x_i]}
+        {\grp[x_{#1}]}
 }
-\NewDocumentCommand {\grpGal} { g } {
-    \IfNoValueTF{#1}
-        {\grp{\text{Gal}_{i}}}
-        {\grp{\text{Gal}_{#1}}}
+\newcommand{\grpGal} [1][] {
+    \MyIfEmptyTF{#1}
+        {\grp[\text{Gal}_{i}]}
+        {\grp[\text{Gal}_{#1}]}
 }
-\NewDocumentCommand {\grpRot} { g } {
-    \IfNoValueTF{#1}
-        {\grp{\text{rot}_{\alpha}}}
-        {\grp{\text{rot}_{#1}}}
+\newcommand{\grpRot} [1][] {
+    \MyIfEmptyTF{#1}
+        {\grp[\text{rot}_{\alpha}]}
+        {\grp[\text{rot}_{#1}]}
 }
-\NewDocumentCommand {\grpP} {} {\grp{P}}
-\NewDocumentCommand {\grpScI} {} {\grp{\text{Sc},I}}
-\NewDocumentCommand {\grpScII} {} {\grp{\text{Sc},II}}
-\NewDocumentCommand {\grpScNs} {} {\grp{\text{Sc,ns}}}
-\NewDocumentCommand {\grpScStat} {} {\grp{\text{Sc,stat}}}
-\NewDocumentCommand {\grpTransStat} { m } {\grp{\text{Tr,stat,{#1}}}}
-\NewDocumentCommand {\grpTransStatI} { g } {%
-    \IfNoValueTF{#1}
-        {\grp{\text{Tr,stat},I}}
-        {\grp{\text{Tr,stat},I, {#1} }}}
-\NewDocumentCommand {\grpTransStatII} { g } {%
-    \IfNoValueTF{#1}
-        {\grp{\text{Tr,stat},II}}
-        {\grp{\text{Tr,stat},II, {#1} }}}
-\NewDocumentCommand {\grpTransStatIII} { g } {%
-    \IfNoValueTF{#1}
-        {\grp{\text{Tr,stat},III}}
-        {\grp{\text{Tr,stat},III, {#1} }}}
+\newcommand{\grpP}  {\grp[P]}
+\newcommand{\grpScI}  {\grp[\text{Sc},I]}
+\newcommand{\grpScII}  {\grp[\text{Sc},II]}
+\newcommand{\grpScNs}  {\grp[\text{Sc,ns}]}
+\newcommand{\grpScStat}  {\grp[\text{Sc,stat}]}
+\newcommand{\grpTransStat} [1] {\grp[\text{Tr,stat,{#1}}]}
+\newcommand{\grpTransStatI} [1][] {%
+    \MyIfEmptyTF{#1}
+        {\grp[\text{Tr,stat},I]}
+        {\grp[\text{Tr,stat},I, {#1} ]}}
+\newcommand{\grpTransStatII} [1][] {%
+    \MyIfEmptyTF{#1}
+        {\grp[\text{Tr,stat},II]}
+        {\grp[\text{Tr,stat},II, {#1} ]}}
+\newcommand{\grpTransStatIII} [1][] {%
+    \MyIfEmptyTF{#1}
+        {\grp[\text{Tr,stat},III]}
+        {\grp[\text{Tr,stat},III, {#1} ]}}
 
-\NewDocumentCommand { \expgrp }{ g } { 
-    \iftoggle{GroupExpSimplified}
-    {\grp}
-    {e^{{#1} \grp}}
-}
+% \newcommand{ \expgrp }[1][] { 
+%     \iftoggle{GroupExpSimplified}
+%     {\grp}
+%     {e^{{#1} \grp}}
+% }
 %for galileian group
-\NewDocumentCommand{\ftGal} {m} {f_{\text{Gal}_{#1}} (t)}
-\NewDocumentCommand{\ftpGal} {m} {f_{\text{Gal}_{#1}}^{\prime} (t)}
-\NewDocumentCommand{\ftppGal} {m} {f_{\text{Gal}_{#1}}^{\prime\prime} (t)}
-\NewDocumentCommand{\ftpppGal} {m} {f_{\text{Gal}_{#1}}^{\prime\prime\prime} (t)}
+\newcommand{\ftGal} [1] {f_{\text{Gal}_{#1}} (t)}
+\newcommand{\ftpGal} [1] {f_{\text{Gal}_{#1}}^{\prime} (t)}
+\newcommand{\ftppGal} [1] {f_{\text{Gal}_{#1}}^{\prime\prime} (t)}
+\newcommand{\ftpppGal} [1] {f_{\text{Gal}_{#1}}^{\prime\prime\prime} (t)}
 %for pressure translation
-\NewDocumentCommand{\ftP} { } {f_{P} (t)}
-\NewDocumentCommand{\ftpP} { } {f_{P}^{\prime} (t)}
-\NewDocumentCommand{\ftppP} { } {f_{P}^{\prime\prime} (t)}
+\newcommand{\ftP}  {f_{P} (t)}
+\newcommand{\ftpP}  {f_{P}^{\prime} (t)}
+\newcommand{\ftppP}  {f_{P}^{\prime\prime} (t)}
 % model for a term
-\NewDocumentCommand { \model } { m } {\mathcal{M}_{#1}}
+\newcommand{ \model } [1] {\mathcal{M}_{#1}}
 
 % integration constant
-\NewDocumentCommand { \intconst } { m g } {
-\IfNoValueTF{#2}
-  {c_{#1}}
-  {c_{{#1}\_{#2}}}
-}
+% \newcommand{ \intconst } [2][] {
+% \MyIfEmptyTF{#1}
+%   {c_{#2}}
+%   {c_{{#2}\_{#1}}}
+% }
 
 % jet stuff
-\NewDocumentCommand { \ucenterline } { } {U_{s}}
+\newcommand{ \ucenterline }  {U_{s}}
 
 % cite author's name in possesive form
-% \NewDocumentCommand { \posscite } { m } { \citeauthor }
+% \newcommand{ \posscite } [1] { \citeauthor }
 \newcommand{\crefrangeconjunction}{--}

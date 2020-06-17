@@ -1,0 +1,17 @@
+* Create semantic syntax for my latex source files.
+
+** Different files
+- ~dakling.sty~: contains the macros. Can be seen as a system-wide configuration valid for all Latex projects. Put this into your LaTeX path (e.g. ~/usr/share/texmf/...~)
+- ~definLocalExample.tex~: contains project-specific settings, should be present in every LaTeX project directory. Alternatively, you can just put the stuff in there into the header.
+- ~example.tex~: not really needed, just shows some examples to simplify understanding what the macros do
+
+** step by step
+- ~git clone https://www.github.com/dakling/latex_macros~
+- copy the file ~definLocalExample.tex~ to your project directory (maybe rename it to ~definLocal.tex~) or directly into the header of the main document
+- put ~dakling.sty~ into the LaTeX path
+- put ~\usepackage{dakling}~ into your main LaTeX source document
+
+** design principles
+- frequently used commands have short names to decrease typing effort and keep the latex source short
+- less frequently used commands have more expressive names
+- commands with short names have to be documented using comments in ~dakling.sty~

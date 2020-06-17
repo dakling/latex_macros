@@ -1,13 +1,5 @@
 \usepackage{xparse}
 
-%load global configuration
-\NewDocumentCommand{ \LoadGlobalConfiguration } {  } {
-    \IfFileExists{ "$LatexGlobalConfig" }
-    { \input{"$LatexGlobalConfig"} } % a global file takes precedence
-    { \input{"definGlobal.tex"} } 
-}
-\LoadGlobalConfiguration
-
 %set local variables
 % for example, in presentations, I prefer to use a simpler notation, even if it makes everything longer
 \toggletrue{EinsteinNotationDiff}

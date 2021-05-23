@@ -98,6 +98,9 @@
 \newcommand{\traAlt} [1] {#1^* }
 \newcommand{\traAltEq} [1] {{#1}^* = }
 
+% nondimensional variables
+\newcommand{\diml} [1] {{#1}^{+}}
+
 \newcommand{\einsteinSum} [2][] {
     \iftoggle{EinsteinSumConvention}
         {\MyIfEmptyTF{#1}
@@ -503,7 +506,13 @@
 %         }
 %     }
 % }
-\newcommand{\pfilter}  {\tilde{P}}
+\newcommand{\pfilter}{\tilde{P}}
+
+% conditional means
+\newcommand{\umturb}[1]{\mean{U}_{#1}^{\text{turb}}}
+\newcommand{\umlam}[1]{\mean{U}_{#1}^{\text{lam}}}
+
+
 % turbulent viscosity
 % \newcommand{\nut}  {\nu_{\text{turb}}}
 \newcommand{\nut}  {\nu_{t}}
@@ -515,6 +524,7 @@
 } 
 \newcommand{\pa}  { \hat{P} }
 \newcommand{\ka}  { \hat{k} }
+\newcommand{\omegaa}  { \hat{\omega} }
 \newcommand{\ualpha} [1][] { 
     \MyIfEmptyTF{#1}
         {v} 

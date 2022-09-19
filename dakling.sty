@@ -1,13 +1,15 @@
 \usepackage{xparse}
 \usepackage{yfonts}
+\usepackage{eucal}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{csquotes}
-\usepackage[noabbrev]{cleveref}
+% \usepackage[noabbrev,capitalise]{cleveref}
+\usepackage[capitalise]{cleveref}
 \usepackage{xifthen}
 
 \makeatletter
-\newcommand{\MyIfEmptyTF}[1]{%
+\newcommand*{\MyIfEmptyTF}[1]{%
   \if\relax\detokenize{#1}\relax%
     \expandafter\@firstoftwo%
   \else%
@@ -57,51 +59,58 @@
 % \catcode`\_ = 13 \def_#1{\sb{#1}{}}
 
 % use with align*-environment
-\newcommand\donumber{\addtocounter{equation}{1}\tag{\theequation}}
+\newcommand*\donumber{\addtocounter{equation}{1}\tag{\theequation}}
 %% low-level macros
 % definition of a good looking bar
-\newcommand{\overbar} [ 1 ] {\mkern 1.5mu\overline{\mkern-1.5mu{#1}\mkern-1.5mu}\mkern 1.5mu}
-% \newcommand{\overbar} [ 1 ] {\widebar{#1}}
+\newcommand*{\overbar} [ 1 ] {\mkern 1.5mu\overline{\mkern-1.5mu{#1}\mkern-1.5mu}\mkern 1.5mu}
+% \newcommand*{\overbar} [ 1 ] {\widebar{#1}}
 
 %% semantic macros
 % real numbers
-\newcommand{\real} [1][] { 
+\newcommand*{\real} [1][] {
     % \MyIfEmptyTF{#1}
         % {\mathbb{R} }
         {\mathbb{R}^{#1} }
         }
 % symbols to denote entire equations
-\newcommand{\nc} [ 1 ] { \mathcal{N}_{#1} }
-\newcommand{\ncm} [ 1 ] { \mean{\mathcal{N}_{#1}} }
-\newcommand{\ncf} [ 1 ] { \mathcal{N}_{#1}' }
+\newcommand*{\nc} [ 1 ] { \mathcal{N}_{#1} }
+\newcommand*{\ncm} [ 1 ] { \mean{\mathcal{N}_{#1}} }
+\newcommand*{\ncf} [ 1 ] { \mathcal{N}_{#1}' }
 % generic vector/tensor
-\newcommand{\vv}[1]{\mathbf{#1}}
-\newcommand{\xv}{ \vv{x} }
-\newcommand{\yv}{ \vv{y} }
-\newcommand{\te}[1]{ \mathbf{#1} }
-\newcommand{\xt}{ \te{x} }
-\newcommand{\yt}{ \te{y} }
+% \newcommand*{\vv}[1]{\mathbf{#1}}
+\newcommand*{\vv}[1]{\boldsymbol #1}
+\newcommand*{\xv}{ \vv{x} }
+\newcommand*{\yv}{ \vv{y} }
+\newcommand*{\uv}{ \vv{u} }
+\newcommand*{\zv}{ \vv{z} }
+% \newcommand*{\te}[1]{ \mathbf{#1} }
+\newcommand*{\te}[1]{ \boldsymbol #1 }
+\newcommand*{\xt}{ \te{x} }
+\newcommand*{\yt}{ \te{y} }
+% absolute value
+\newcommand*{\abs}[1]{\left| #1 \right|}
 % "order of" symbol
-\newcommand{\order} [2] { 
+\newcommand*{\orderBase}{\textit{O}}
+\newcommand*{\order} [2] {
     \MyIfEmptyTF{#2}
-    {\textit{O}(#1) }
-    {\textit{O}({#1}^{#2}) }
+    {\orderBase(#1)}
+    {\orderBase({#1}^{#2}) }
 }
-\newcommand{\code} [ 1 ] { \texttt{#1} }
+\newcommand*{\code} [ 1 ] { \texttt{#1} }
 % evaluate (eg derivative) at position
-\newcommand{\atpos} [2] { \bigg|_{{#1} = {#2}} } % use evalfun instead!
-\newcommand{\evalfunI} [3] {\left.\kern-\nulldelimiterspace {#1} \right|_{{#2} = {#3}}}
-\newcommand{\evalfun} [3] {\left. #1 \right|_{{#2} = {#3}}}
+\newcommand*{\atpos} [2] { \bigg|_{{#1} = {#2}} } % use evalfun instead!
+\newcommand*{\evalfunI} [3] {\left.\kern-\nulldelimiterspace {#1} \right|_{{#2} = {#3}}}
+\newcommand*{\evalfun} [3] {\left. #1 \right|_{{#2} = {#3}}}
 % transformed (symmetries)
-\newcommand{\tra} [1] {\traAltEq{#1}}
-\newcommand{\traAnco} [1] {#1 \rightarrow}
-\newcommand{\traAlt} [1] {#1^* }
-\newcommand{\traAltEq} [1] {{#1}^* = }
+\newcommand*{\tra}[2][]{\traAltEq[#1]{#2}}
+\newcommand*{\traAnco}[2][]{#2^{#1} \rightarrow}
+\newcommand*{\traAlt}[2][]{{#2^{* #1}}}
+\newcommand*{\traAltEq}[2][]{{#2^{* #1} =\; }}
 
 % nondimensional variables
-\newcommand{\diml} [1] {{#1}^{+}}
+\newcommand*{\diml} [1] {{#1}^{+}}
 
-\newcommand{\einsteinSum} [2][] {
+\newcommand*{\einsteinSum} [2][] {
     \iftoggle{EinsteinSumConvention}
         {\MyIfEmptyTF{#1}
             {}
@@ -112,17 +121,19 @@
             {\sum_{{#2}=1}^{3}}
             {\sum_{{#2}=1}^{3} \left( {#1} \right)}}}
 % representation of similarity variables
-\newcommand{\simvar} [1] {\widetilde{#1}}
+\newcommand*{\simvareta}{\eta}
+\newcommand*{\simvarxi}{\xi}
+\newcommand*{\simvar} [1] {\widetilde{#1}}
 % averaging
 \ExplSyntaxOn
-\newcommand{\mean} [1] {
+\newcommand*{\mean} [1] {
     \tl_set:Nn \l_tmpa_tl { #1 } % store argument in variable \l_tmpa_tl
     \int_compare:nTF { \tl_count:N \l_tmpa_tl = 1 } % check if the argument only contains a single value
         { \bar{#1} } % if there is only one letter, use the bar macro
         { \overline{#1}} % otherwise use the longer overline
     }
 % derivatives
-\newcommand{\diffGeneric}[4][]{
+\newcommand*{\diffGeneric}[4][]{
     \MyIfEmptyTF{#1}
         { \cfrac{#4 #2}{#4 #3} }
         { \int_compare:nTF{ #1=2 } % second derivatives in Einstein notation
@@ -135,182 +146,224 @@
 }
 \ExplSyntaxOff
 % total derivative
-\newcommand{\dd} [3][] { \diffGeneric[#1]{#2}{#3}{d} }
+\newcommand*{\dd} [3][] { \diffGeneric[#1]{#2}{#3}{d} }
 % partial derivative
-\newcommand{\pd} [3][] { \diffGeneric[#1]{#2}{#3}{\partial} }
+\newcommand*{\pd} [3][] { \diffGeneric[#1]{#2}{#3}{\partial} }
 % material derivative
-\newcommand{\md} [3][] { \diffGeneric[#1]{#2}{#3}{D} }
-% derivatives without frac 
-\newcommand{\diffInline} [3] { {#3 #1}/{#3 #2} }
-\newcommand{\did} [2] { \diffInline{#1}{#2}{d} }
-\newcommand{\pdi} [2] { \diffInline{#1}{#2}{\partial} }
-\newcommand{\mdi} [2] { \diffInline{#1}{#2}{D} }
+\newcommand*{\md} [3][] { \diffGeneric[#1]{#2}{#3}{D} }
+\newcommand*{\mda} [3][] { \diffGeneric[#1]{#2}{#3}{\hat{D}} }
+% total derivative (jet notation)
+\newcommand*{\td} [3][] { \diffGeneric[#1]{#2}{#3}{\mathcal{D}} }
+% derivatives without frac
+\newcommand*{\diffInline} [3] { {#3 #1}/{#3 #2} }
+\newcommand*{\did} [2] { \diffInline{#1}{#2}{d} }
+\newcommand*{\pdi} [2] { \diffInline{#1}{#2}{\partial} }
+\newcommand*{\mdi} [2] { \diffInline{#1}{#2}{D} }
+\newcommand*{\tdi} [2] { \diffInline{#1}{#2}{\mathcal{D}} }
+\newcommand*{\mdai} [2] { \diffInline{#1}{#2}{\hat{D}} }
 % jet derivative
-% \newcommand{\jd} [2] { \underset{#2}{#1} }
-% \newcommand{\jd} [2] { {#1}_{{\!,{#2}}} }
-\newcommand{\jd} [2] { {#1}{}_{{\!,{#2}}} }
+% \newcommand*{\jd} [2] { \underset{#2}{#1} }
+% \newcommand*{\jd} [2] { {#1}_{{\!,{#2}}} }
+\newcommand*{\jd} [2] { {#1}{}_{{\!,{#2}}} }
 
 % for a long first arg it is nicer to write d/dx(z+longArg)
-\newcommand{\diffLongGeneric} [4][] {\diffGeneric[#1]{}{#3}{#4}{#2}}
-\newcommand{\ddl} [3][] { \diffLongGeneric[#1]{#2}{#3}{d} }
-\newcommand{\pdl} [3][] { \diffLongGeneric[#1]{#2}{#3}{\partial} }
-\newcommand{\mdl} [3][] { \diffLongGeneric[#1]{#2}{#3}{D} }
+\newcommand*{\diffLongGeneric} [4][] {\diffGeneric[#1]{}{#3}{#4}{#2}}
+\newcommand*{\ddl} [3][] { \diffLongGeneric[#1]{#2}{#3}{d} }
+\newcommand*{\pdl} [3][] { \diffLongGeneric[#1]{#2}{#3}{\partial} }
+\newcommand*{\mdl} [3][] { \diffLongGeneric[#1]{#2}{#3}{D} }
+\newcommand*{\tdl} [3][] { \diffLongGeneric[#1]{#2}{#3}{\mathcal{D}} }
 
-\newcommand{\diffSecond} [4] {
+\newcommand*{\diffSecond} [4] {
     \cfrac{{#1} ^2 {#2}}{{#1} {#3} {#1} {#4}}
 }
 % total derivative
-\newcommand{\ddSecond} [3] { \diffSecond{d}{#1}{#2}{#3} }
+\newcommand*{\ddSecond} [3] { \diffSecond{d}{#1}{#2}{#3} }
 % partial derivative
-\newcommand{\pdSecond} [3] { \diffSecond{\partial}{#1}{#2}{#3} }
+\newcommand*{\pdSecond} [3] { \diffSecond{\partial}{#1}{#2}{#3} }
 % material derivative
-\newcommand{\mdSecond} [3] { \diffSecond{D}{#1}{#2}{#3} }
+\newcommand*{\mdSecond} [3] { \diffSecond{D}{#1}{#2}{#3} }
+\newcommand*{\tdSecond} [3] { \diffSecond{\mathcal{D}}{#1}{#2}{#3} }
 
+\newcommand*{\xc}[1]{x_{#1}}
+\newcommand*{\zc}[1]{z_{#1}}
+% \newcommand*{\nondim}[1]{{}^+ {#1}}
+\newcommand*{\xnd}[1]{x_{#1^+}}
+\newcommand*{\tc}{t}
+\newcommand*{\deltat}{\Delta t}
 
 % velocity moments
-\newcommand{\ui}[1]{U_{#1}} % unaveraged velocity
-\newcommand{\uif}[1]{u_{#1}} % unaveraged fluctuating velocity
+\newcommand*{\ui}[1]{U_{#1}} % unaveraged velocity
+\newcommand*{\uif}[1]{u_{#1}} % unaveraged fluctuating velocity
 
-\newcommand{\umv}  {
+\newcommand*{\umv}  {
 \bar{\vv{U}}
 }
-\newcommand{\uav}  {
+\newcommand*{\uav}  {
 \hat{\vv{U}}
 }
-\newcommand{\ufv}  {
+\newcommand*{\ufv}  {
 \mean{\vv{u} \otimes \vv{u}}
 }
 
-\newcommand{\ufFirst} [1] { u_{#1} }
-\newcommand{\ufHigherShort} [1] {%
-        {\iftoggle{OnePointExponent}
-        {R^{(0)}_{#1}} 
-        {R_{#1}}}
+\newcommand*{\uflucthigherbase}{R}
+\newcommand*{\uinsthigherbase}{H}
+
+\newcommand*{\ufFirst} [1] { u_{#1} }
+\newcommand*{\ufHigherShort} [1] {%
+        \iftoggle{OnePointExponent}
+        {\uflucthigherbase^{(0)}_{#1}}
+        {\uflucthigherbase_{#1}}
         }
-\newcommand{\uftHigherShort} [1] {%
-        {R_{#1}}
+\newcommand*{\uftHigherShort} [1] {%
+        \uflucthigherbase_{#1}
         }
 
-\newcommand{\ufHigherLong} [1] {%
+\newcommand*{\ufHigherLong} [1] {%
     \mean{\foreachletter{\uif}{}{#1}}
 }
 
-\newcommand{\ufHigher} [1] {%
-        {\iftoggle{ShortHigherMoments}
+\newcommand*{\ufHigher} [1] {%
+        \iftoggle{ShortHigherMoments}
         {\ufHigherShort{#1}} 
-        {\ufHigherLong{#1}}}
+        {\ufHigherLong{#1}}
         }
 
-\newcommand{\uftHigher} [1] {%
-        {\iftoggle{ShortHigherMoments}
+\newcommand*{\uftHigher} [1] {%
+        \iftoggle{ShortHigherMoments}
         {\uftHigherShort{#1}} 
-        {\ufHigherLong{#1}}}
+        {\ufHigherLong{#1}}
         }
 
-\newcommand{\umFirst} [1] { \mean{U}_{#1} }
-\newcommand{\umHigherShort} [1] {%
-        {\iftoggle{OnePointExponent}
-        {H^{(0)}_{#1}} 
-        {H_{#1}}}
+\newcommand*{\umFirst} [1] { \mean{U}_{#1} }
+\newcommand*{\umHigherShort} [1] {%
+        \iftoggle{OnePointExponent}
+        {\uinsthigherbase^{(0)}_{#1}}
+        {\uinsthigherbase_{#1}}
         }
 
-\newcommand{\umHigherLong} [1] {%
+\newcommand*{\umHigherLong} [1] {%
     \mean{\foreachletter{\ui}{}{#1}}
 }
 
-\newcommand{\umtHigherShort} [1] {%
-        {H_{#1}}
+\newcommand*{\umtHigherShort} [1] {%
+        \uinsthigherbase_{#1}
         }
 
-\newcommand{\umtHigherLong} [1] {%
+\newcommand*{\umtHigherLong} [1] {%
     \mean{\foreachletter{\ui}{}{#1}}
 }
 
-\newcommand{\umHigher} [1] {%
-        {\iftoggle{ShortHigherMoments}
+\newcommand*{\umHigher} [1] {%
+        \iftoggle{ShortHigherMoments}
         {\umHigherShort{#1}} 
-        {\umHigherLong{#1}}}
+        {\umHigherLong{#1}}
         }
 
-\newcommand{\umtHigher} [1] {%
-        {\iftoggle{ShortHigherMoments}
+\newcommand*{\umtHigher} [1] {%
+        \iftoggle{ShortHigherMoments}
         {\umtHigherShort{#1}} 
-        {\umHigherLong{#1}}}
+        {\umHigherLong{#1}}
         }
 
 \ExplSyntaxOn
-\newcommand{\uf} [1] {
+\newcommand*{\uf} [1] {
     \tl_set:Nn \l_tmpa_tl { #1 } % store argument in variable \l_tmpa_tl
     \int_compare:nTF { \tl_count:N \l_tmpa_tl = 1 } % check if the argument only contains a single value
         {\ufFirst{#1}} %
         {\ufHigher{#1}} %
     }
-\newcommand{\uft} [1] {
+\newcommand*{\uft} [1] {
     \tl_set:Nn \l_tmpa_tl { #1 } % store argument in variable \l_tmpa_tl
     \int_compare:nTF { \tl_count:N \l_tmpa_tl = 1 } % check if the argument only contains a single value
         {\ufFirst{#1}} %
         {\uftHigher{#1}} %
     }
-\newcommand{\um} [1] {
+\newcommand*{\um} [1] {
     \tl_set:Nn \l_tmpa_tl { #1 } % store argument in variable \l_tmpa_tl
     \int_compare:nTF { \tl_count:N \l_tmpa_tl = 1 } % check if the argument only contains a single value
         {\umFirst{#1}} %
         {\umHigher{#1}} %
     }
-\newcommand{\umt} [1] {
+\newcommand*{\umt} [1] {
     \tl_set:Nn \l_tmpa_tl { #1 } % store argument in variable \l_tmpa_tl
     \int_compare:nTF { \tl_count:N \l_tmpa_tl = 1 } % check if the argument only contains a single value
         {\umFirst{#1}} %
         {\umtHigher{#1}} %
     }
 \ExplSyntaxOff
-\renewcommand{\pm}  {\mean{P}}
-\newcommand{\pf}  {p}
+\renewcommand*{\pm}{\mean{P}}
+\newcommand*{\pin}{P}
+\newcommand*{\pf}{p}
 \ExplSyntaxOn
-\newcommand{\umTensor} [1] { 
+\newcommand*{\umTensor} [1] {
     \int_compare:nTF { #1 = 1 } % 
     { \vv{\um} }
     { \vv{H^0} }
 }
-\newcommand{\ufTensor} [1] { 
+\newcommand*{\ufTensor} [1] {
     \int_compare:nTF { #1 = 1 } % 
     { \vv{\uf} }
     { \vv{R^0} }
 }
-\newcommand{\umTensorTwoPt} [1] { 
+\newcommand*{\umTensorTwoPt} [1] {
     \int_compare:nTF { #1 = 1 } % 
     { \vv{\um} }
     { \vv{H} }
 }
-\newcommand{\ufTensorTwoPt} [1] { 
+\newcommand*{\ufTensorTwoPt} [1] {
     \int_compare:nTF { #1 = 1 } % 
     { \vv{\uf} }
     { \vv{R} }
 }
 \ExplSyntaxOff
-\newcommand{\pum} [1] {
-        \mean{PU_{#1}}^{(0)}
+
+\newcommand*{\ufmodeled} [1] {
+  % \widetilde{\uf{#1}}
+  \tilde{R}_{#1}
+}
+
+\newcommand*{\ufinvmodeled} [1] {
+  \hat{R}_{#1}
+}
+
+\newcommand*{\pum} [1] {
+        {\iftoggle{OnePointExponent}
+        {\mean{PU_{#1}}^{(0)}}
+        {\mean{PU_{#1}}}
+        }
         % {\mean{PU_{#1}}(\vv{#2},\vv{#3})}
 }
-\newcommand{\upm} [1] {
-        \mean{U_{#1}P}^{(0)}
+\newcommand*{\upm} [1] {
+        {\iftoggle{OnePointExponent}
+        {\mean{U_{#1}P}^{(0)}}
+        {\mean{U_{#1}P}}
+        }
         % {\mean{U_{#1}P}(\vv{#2},\vv{#3})}
 }
-\newcommand{\umpx} [2] {
-    \mean{U_{#1} \jd{P}{x_{#2}}}^{(0)}
+\newcommand*{\umpx} [2] {
+        {\iftoggle{OnePointExponent}
+          {\mean{U_{#1} \jd{P}{x_{#2}}}^{(0)}}
+          {\mean{U_{#1} \jd{P}{x_{#2}}}}
+          }
         % {\mean{U_{#1}P}(\vv{#2},\vv{#3})}
 }
-\newcommand{\puf} [1] {
-        \mean{pu_{#1}}^{(0)}
+\newcommand*{\puf} [1] {
+        {\iftoggle{OnePointExponent}
+        {\mean{pu_{#1}}^{(0)}}
+        {\mean{pu_{#1}}}
+        }
         % {\mean{pu_{#1}}(\vv{#2},\vv{#3})}
 }
-\newcommand{\upf} [1] {
-        \mean{u_{#1}p}^{(0)}
+\newcommand*{\upf} [1] {
+        {\iftoggle{OnePointExponent}
+        {\mean{u_{#1}p}^{(0)}}
+        {\mean{u_{#1}p}}
+        }
         % {\mean{u_{#1}p}(\vv{#2},\vv{#3})}
 }
 % two-point correlations
 % instantaneous approach
-% \newcommand{\umtWithoutArgsShort} [8] {
+% \newcommand*{\umtWithoutArgsShort} [8] {
 %     \MyIfEmptyTF{#1}
 %             { \um }
 %             {\MyIfEmptyTF{#2}
@@ -325,7 +378,7 @@
 %             }
 %         }
 %      }
-% \newcommand{\umtWithArgsShort} [8] {
+% \newcommand*{\umtWithArgsShort} [8] {
 %         \MyIfEmptyTF{#1}
 %             { \um(\vv{#5}) }
 %             {\MyIfEmptyTF{#2}
@@ -339,7 +392,7 @@
 %             }
 %         }
 %  }
-% \newcommand{\umtShort} [8] { 
+% \newcommand*{\umtShort} [8] {
 %     \MyIfEmptyTF{#5}
 %     { \umtWithoutArgsShort{#1}{#2}{#3}{#4}[#5][#6][#7][#8] }
 %     { \iftoggle{ShowArgsTwoPoint}
@@ -347,7 +400,7 @@
 %         { \umtWithoutArgsShort{#1}{#2}{#3}{#4}[#5][#6][#7][#8] }
 %     }
 % }
-% \newcommand{\umtWithoutArgsLong} [8] {
+% \newcommand*{\umtWithoutArgsLong} [8] {
 %     \MyIfEmptyTF{#1}
 %             { \um }
 %             {\MyIfEmptyTF{#2}
@@ -362,7 +415,7 @@
 %             }
 %         }
 %      }
-% \newcommand{\umtWithArgsLong} [8] {
+% \newcommand*{\umtWithArgsLong} [8] {
 %         \MyIfEmptyTF{#1}
 %             { \um(\vv{#5}) }
 %             {\MyIfEmptyTF{#2}
@@ -376,7 +429,7 @@
 %             }
 %         }
 %  }
-% \newcommand{\umtLong} [8] { 
+% \newcommand*{\umtLong} [8] {
 %     \MyIfEmptyTF{#5}
 %     { \umtWithoutArgsLong{#1}{#2}{#3}{#4}[#5][#6][#7][#8] }
 %     { \iftoggle{ShowArgsTwoPoint}
@@ -384,13 +437,13 @@
 %         { \umtWithoutArgsLong{#1}{#2}{#3}{#4}[#5][#6][#7][#8] }
 %     }
 % }
-%  \newcommand{\umt} [8] { 
+%  \newcommand*{\umt} [8] {
 %      \iftoggle{ShortHigherMoments}
 %      {\umtShort{#1}{#2}{#3}{#4}[#5][#6][#7][#8]}
 %      {\umtLong{#1}{#2}{#3}{#4}[#5][#6][#7][#8]}
 %  }
 % % fluctuation approach
-% \newcommand{\uftWithoutArgsShort} [4] {
+% \newcommand*{\uftWithoutArgsShort} [4] {
 %     \MyIfEmptyTF{#1}
 %             { \uf }
 %             {\MyIfEmptyTF{#2}
@@ -404,7 +457,7 @@
 %             }
 %         }
 %      }
-% \newcommand{\uftWithArgsShort} [8] {
+% \newcommand*{\uftWithArgsShort} [8] {
 %         \MyIfEmptyTF{#1}
 %             { \uf(\vv{#5}) }
 %             {\MyIfEmptyTF{#2}
@@ -418,7 +471,7 @@
 %             }
 %         }
 %  }
-% \newcommand{\uftShort} [8] { 
+% \newcommand*{\uftShort} [8] {
 %     \MyIfEmptyTF{#5}
 %     { \uftWithoutArgsShort{#1}{#2}{#3}{#4} }
 %     { \iftoggle{ShowArgsTwoPoint}
@@ -426,7 +479,7 @@
 %         { \uftWithoutArgsShort{#1}{#2}{#3}{#4} }
 %     }
 % }
-% \newcommand{\uftWithoutArgsLong} [4] {
+% \newcommand*{\uftWithoutArgsLong} [4] {
 %     \MyIfEmptyTF{#1}
 %             { \uf }
 %             {\MyIfEmptyTF{#2}
@@ -440,7 +493,7 @@
 %             }
 %         }
 %      }
-% \newcommand{\uftWithArgsLong} [8] {
+% \newcommand*{\uftWithArgsLong} [8] {
 %         \MyIfEmptyTF{#1}
 %             { \uf(\vv{#5}) }
 %             {\MyIfEmptyTF{#2}
@@ -454,7 +507,7 @@
 %             }
 %         }
 %  }
-% \newcommand{\uftLong} [8] { 
+% \newcommand*{\uftLong} [8] {
 %     \MyIfEmptyTF{#5}
 %     { \uftWithoutArgsLong{#1}{#2}{#3}{#4} }
 %     { \iftoggle{ShowArgsTwoPoint}
@@ -462,37 +515,37 @@
 %         { \uftWithoutArgsLong{#1}{#2}{#3}{#4} }
 %     }
 % }
-%  \newcommand{\uft} [8] { 
+%  \newcommand*{\uft} [8] {
 %      \iftoggle{ShortHigherMoments}
 %      {\uftShort{#1}{#2}{#3}{#4}[#5][#6][#7][#8]}
 %      {\uftLong{#1}{#2}{#3}{#4}[#5][#6][#7][#8]}
 %  }
-\newcommand{\puft} [2][] {
+\newcommand*{\puft} [2][] {
     \MyIfEmptyTF{#1}
         {\mean{pu_{#2}}}
         {\mean{pu_{#2}}}
         % {\mean{pu_{#1}}(\vv{#2},\vv{#3})}
 }
-\newcommand{\upft} [2][] {
+\newcommand*{\upft} [2][] {
     \MyIfEmptyTF{#1}
         {\mean{u_{#2}p}}
         {\mean{u_{#2}p}}
         % {\mean{u_{#1}p}(\vv{#2},\vv{#3})}
 }
-\newcommand{\pumt} [2][] {
+\newcommand*{\pumt} [2][] {
     \MyIfEmptyTF{#1}
         {\mean{PU_{#2}}}
         {\mean{PU_{#2}}}
         % {\mean{PU_{#1}}(\vv{#2},\vv{#3})}
 }
-\newcommand{\upmt} [2][] {
+\newcommand*{\upmt} [2][] {
     \MyIfEmptyTF{#1}
         {\mean{U_{#2}P}}
         {\mean{U_{#2}P}}
         % {\mean{U_{#1}P}(\vv{#2},\vv{#3})}
 }
 %LES
-% \newcommand{\ufilter} [4] {
+% \newcommand*{\ufilter} [4] {
 %     \MyIfEmptyTF{#1}
 %         { \tilde{U} }
 %         {\MyIfEmptyTF{#2}
@@ -506,178 +559,278 @@
 %         }
 %     }
 % }
-\newcommand{\pfilter}{\tilde{P}}
+\newcommand*{\pfilter}{\tilde{P}}
 
 % conditional means
-\newcommand{\umturb}[1]{\mean{U}_{#1}^{\text{turb}}}
-\newcommand{\umlam}[1]{\mean{U}_{#1}^{\text{lam}}}
+\newcommand*{\umturb}[1]{\mean{U}_{#1}^{\text{turb}}}
+\newcommand*{\umlam}[1]{\mean{U}_{#1}^{\text{lam}}}
 
 
 % turbulent viscosity
-% \newcommand{\nut}  {\nu_{\text{turb}}}
-\newcommand{\nut}  {\nu_{t}}
-% artificial velocity 
-\newcommand{\ua} [1] { 
+% \newcommand*{\nut}  {\nu_{\text{turb}}}
+\newcommand*{\nut}  {\nu_{t}}
+\newcommand*{\tke}{k}
+\newcommand*{\tdr}{\varepsilon}
+\newcommand*{\stdr}{\omega}
+% artificial velocity
+\newcommand*{\uaBase}{\hat{U}}
+\newcommand*{\ua} [1] {
     % \MyIfEmptyTF{#1}
     % {\hat{U}} 
-    {\hat{U}_{#1}} 
+    \uaBase_{#1}
 } 
-\newcommand{\pa}  { \hat{P} }
-\newcommand{\ka}  { \hat{k} }
-\newcommand{\omegaa}  { \hat{\omega} }
-\newcommand{\ualpha} [1][] { 
+\newcommand*{\pa}{ \hat{P} }
+\newcommand*{\ufabase}{\hat{R}}
+\newcommand*{\ufa}[1]{\ufabase_{#1}}
+\newcommand*{\umh}[1]{\uinsthigherbase_{#1}}
+\newcommand*{\ka}  { \hat{k} }
+\newcommand*{\stdra}  { \hat{\omega} }
+\newcommand*{\tdra}  { \hat{\varepsilon} }
+\newcommand*{\ualpha} [1][] {
     \MyIfEmptyTF{#1}
         {v} 
         {v_{#1}} 
 } 
 % k- eps - model
-\newcommand{\kepsmodel}  {{\(k\)-\(\varepsilon\)-model}}
+\newcommand*{\kepsmodel}{{\(k\)-\(\varepsilon\)-model}}
+\newcommand*{\Kepsmodel}{{\(k\)-\(\varepsilon\)-Model}}
+\newcommand*{\keps}{{\(k\)-\(\varepsilon\)}}
 % k- omega - model
-\newcommand{\komegamodel}  {{\(k\)-\(\omega\)-model}}
+\newcommand*{\komegamodel}{{\(k\)-\(\omega\)-model}}
+\newcommand*{\Komegamodel}{{\(k\)-\(\omega\)-Model}}
+\newcommand*{\komega}{{\(k\)-\(\omega\)}}
+\newcommand*{\klimited}{{k^{\prime}}}
+\newcommand*{\omegatrans}{\tilde{\omega}}
+\newcommand*{\omegatranslimited}{\tilde{\omega}^{\prime}}
+\newcommand*{\omegarealz}{\omega_{\text{min}}}
+% \newcommand*{\omegarealz}{\omega_{\text{realizable}}}
+\newcommand*{\omegaITOomegatrans}  {{\exp{(\tilde{\omega}^{\prime})}}}
 %Symmetry generators
-\newcommand{\infGen} [1][] {
+\newcommand*{\infGenBase}{X}
+\newcommand*{\infGenEvo} [1][] {%
     \MyIfEmptyTF{#1}
-    {X}
-        {X_{#1}}
+    {\hat{\infGenBase}}
+        {\hat{\infGenBase_{#1}}}
     }
-    \newcommand{\infGenT}  {\infGen[t]}
-\newcommand{\infGenX} [1][] {
+\newcommand*{\infGen} [1][] {%
+    \MyIfEmptyTF{#1}
+    {\infGenBase}
+        {\infGenBase_{#1}}
+    }
+    \newcommand*{\infGenT}  {\infGen[t]}
+\newcommand*{\infGenX} [1][] {
     \MyIfEmptyTF{#1} 
     {\infGen[x_i]}
     {\infGen[x_{#1}]}
 }
-\newcommand{\infGenGal} [1][] {
+\newcommand*{\infGenGal} [1][] {
     \MyIfEmptyTF{#1} 
     {\infGen[\text{Gal}]}
     {\infGen[{\text{Gal}_{{#1}}}]}
 }
-\newcommand{\infGenGalDiff} [1][] {
+\newcommand*{\infGenGalDiff} [1][] {
     \MyIfEmptyTF{#1} 
     {\tilde{\infGen}_{\text{Gal}}}
     {\tilde{\infGen}_{{\text{Gal}_{{#1}}}}}
 }
-\newcommand{\infGenRot} [1][]
+\newcommand*{\infGenRot} [1][]
 {\MyIfEmptyTF{#1}
     {\infGen[{\text{rot}_{\alpha}}]}
     {\infGen[{\text{rot}_{#1}}]}}
 
-\newcommand{\infGenP}  {\infGen[P]}
-\newcommand{\infGenPDiff}  {\tilde{\infGen}_[P]}
-\newcommand{\infGenScI}  {\infGen[\text{Sc},I]}
-\newcommand{\infGenScII}  {\infGen[\text{Sc},II]}
-\newcommand{\infGenScNs}  {\infGen[\text{Sc,ns}]}
-\newcommand{\infGenScStat}  {\infGen[\text{Sc,stat}]}
-\newcommand{\infGenTransStat} [1] {X_{{\text{Tr,stat,{#1}}}}}
-\newcommand{\infGenTransStatI} [1][] {%
+\newcommand*{\infGenP}  {\infGen[P]}
+\newcommand*{\infGenPDiff}  {\tilde{\infGen}_[P]}
+\newcommand*{\infGenScI}  {\infGen[\text{Sc},I]}
+\newcommand*{\infGenScII}  {\infGen[\text{Sc},II]}
+\newcommand*{\infGenScNs}  {\infGen[\text{Sc,ns}]}
+\newcommand*{\infGenScStat}  {\infGen[\text{Sc,stat}]}
+\newcommand*{\infGenTransStat} [1] {\infGen[{\text{Tr,stat,{#1}}}]}
+\newcommand*{\infGenTransStatI} [1][] {%
     \MyIfEmptyTF{#1}
-        {X_{\text{Tr,stat},I}}
-        {X_{\text{Tr,stat},I, {#1} }}}
-\newcommand{\infGenTransStatII} [1][] {%
+        {\infGen[\text{Tr,stat},1]}
+        {\infGen[\text{Tr,stat},1, {#1} ]}}
+\newcommand*{\infGenTransStatII} [1][] {%
     \MyIfEmptyTF{#1}
-        {X_{\text{Tr,stat},II}}
-        {X_{\text{Tr,stat},II, {#1} }}}
+        {\infGen[\text{Tr,stat},2]}
+        {\infGen[\text{Tr,stat},2, {#1} ]}}
+\newcommand*{\infGenTransStatIII} [1][] {%
+    \MyIfEmptyTF{#1}
+        {\infGen[\text{Tr,stat},3]}
+        {\infGen[\text{Tr,stat},3, {#1} ]}}
 %Global form
-\newcommand{\gloSymm} [1][] {
+\newcommand*{\gloSymmBase}{T}
+\newcommand*{\gloSymm} [1][] {
     \MyIfEmptyTF{#1}
-    {T}
-    {T_{#1}}
+    {\gloSymmBase}
+    {\gloSymmBase_{#1}}
 }
-\newcommand\gloSymmT{\gloSymm[t]}
-\newcommand{\gloSymmX} [1][] {
+\newcommand*\gloSymmT{\gloSymm[t]}
+\newcommand*{\gloSymmX} [1][] {
     \MyIfEmptyTF{#1}
         {\gloSymm[x_i]}
         {\gloSymm[x_{#1}]}
 }
-\newcommand{\gloSymmGal} [1][] {
+\newcommand*{\gloSymmGal} [1][] {
     \MyIfEmptyTF{#1}
         {\gloSymm[\text{Gal}_{i}]}
         {\gloSymm[\text{Gal}_{#1}]}
 }
-\newcommand{\gloSymmRot}  {\gloSymm[\text{rot}_{\alpha}]}
-\newcommand{\gloSymmP}  {\gloSymm[P]}
-\newcommand{\gloSymmScI}  {\gloSymm[\text{Sc},I]}
-\newcommand{\gloSymmScII}  {\gloSymm[\text{Sc},II]}
-\newcommand{\gloSymmScNs}  {\gloSymm[\text{Sc,ns}]}
-\newcommand{\gloSymmScStat}  {\gloSymm[\text{Sc,stat}]}
-\newcommand{\gloSymmTransStat} [1][] {T_{\text{Tr,stat,{#1}}}}
-\newcommand{\gloSymmTransStatI} [1][] {%
+\newcommand*{\gloSymmRot}  {\gloSymm[\text{rot}_{\alpha}]}
+\newcommand*{\gloSymmP}  {\gloSymm[P]}
+\newcommand*{\gloSymmScI}  {\gloSymm[\text{Sc},I]}
+\newcommand*{\gloSymmScII}  {\gloSymm[\text{Sc},II]}
+\newcommand*{\gloSymmScNs}  {\gloSymm[\text{Sc,ns}]}
+\newcommand*{\gloSymmScStat}  {\gloSymm[\text{Sc,stat}]}
+\newcommand*{\gloSymmTransStat} [1][] {\gloSymm[\text{Tr,stat,{#1}}]}
+\newcommand*{\gloSymmTransStatI} [1][] {%
     \MyIfEmptyTF{#1}
-        {T_{\text{Tr,stat},I}}
-        {T_{\text{Tr,stat},I, {#1} }}}
-\newcommand{\gloSymmTransStatII} [1][] {%
+        {\gloSymm[\text{Tr,stat},I]}
+        {\gloSymm[\text{Tr,stat},I, {#1} ]}}
+\newcommand*{\gloSymmTransStatII} [1][] {%
     \MyIfEmptyTF{#1}
-        {T_{\text{Tr,stat},II}}
-        {T_{\text{Tr,stat},II, {#1} }}}
+        {\gloSymm[\text{Tr,stat},II]}
+        {\gloSymm[\text{Tr,stat},II, {#1} ]}}
 
-\newcommand{\lagX} [1] {\xi_{#1}}
+\newcommand*{\lagX} [1] {\xi_{#1}}
 % group parameter
-\newcommand{\grp}[1][]{ 
+\newcommand*{\grpBase}{a}
+\newcommand*{\grp}[1][]{
     \MyIfEmptyTF{#1}
-    {a}
-    {a_{#1}}
+    {\grpBase}
+    {\grpBase_{#1}}
 }
-\newcommand{\grpT}  {\grp[T]}
-\newcommand{\grpX} [1][] {
+\newcommand*{\grpT}  {\grp[T]}
+\newcommand*{\grpX} [1][] {
     \MyIfEmptyTF{#1}
         {\grp[x_i]}
         {\grp[x_{#1}]}
 }
-\newcommand{\grpGal} [1][] {
+\newcommand*{\grpGal} [1][] {
     \MyIfEmptyTF{#1}
         {\grp[\text{Gal}_{i}]}
         {\grp[\text{Gal}_{#1}]}
 }
-\newcommand{\grpRot} [1][] {
+\newcommand*{\grpRot} [1][] {
     \MyIfEmptyTF{#1}
         {\grp[\text{rot}_{\alpha}]}
         {\grp[\text{rot}_{#1}]}
 }
-\newcommand{\grpP}  {\grp[P]}
-\newcommand{\grpScI}  {\grp[\text{Sc},I]}
-\newcommand{\grpScII}  {\grp[\text{Sc},II]}
-\newcommand{\grpScNs}  {\grp[\text{Sc,ns}]}
-\newcommand{\grpScStat}  {\grp[\text{Sc,stat}]}
-\newcommand{\grpTransStat} [1] {\grp[\text{Tr,stat,{#1}}]}
-\newcommand{\grpTransStatI} [1][] {%
+\newcommand*{\grpP}  {\grp[P]}
+\newcommand*{\grpScI}  {\grp[\text{Sc},I]}
+\newcommand*{\grpScII}  {\grp[\text{Sc},II]}
+\newcommand*{\grpScNs}  {\grp[\text{Sc,ns}]}
+\newcommand*{\grpScStat}  {\grp[\text{Sc,stat}]}
+\newcommand*{\grpTransStat} [1] {\grp[\text{Tr,stat,{#1}}]}
+\newcommand*{\grpTransStatI} [1][] {%
     \MyIfEmptyTF{#1}
         {\grp[\text{Tr,stat},I]}
         {\grp[\text{Tr,stat},I, {#1} ]}}
-\newcommand{\grpTransStatII} [1][] {%
+\newcommand*{\grpTransStatII} [1][] {%
     \MyIfEmptyTF{#1}
         {\grp[\text{Tr,stat},II]}
         {\grp[\text{Tr,stat},II, {#1} ]}}
-\newcommand{\grpTransStatIII} [1][] {%
+\newcommand*{\grpTransStatIII} [1][] {%
     \MyIfEmptyTF{#1}
         {\grp[\text{Tr,stat},III]}
         {\grp[\text{Tr,stat},III, {#1} ]}}
 
-% \newcommand{ \expgrp }[1][] { 
+% \newcommand*{ \expgrp }[1][] {
 %     \iftoggle{GroupExpSimplified}
 %     {\grp}
 %     {e^{{#1} \grp}}
 % }
 %for galileian group
-\newcommand{\ftGal} [1] {f_{\text{Gal}_{#1}} (t)}
-\newcommand{\ftpGal} [1] {f_{\text{Gal}_{#1}}^{\prime} (t)}
-\newcommand{\ftppGal} [1] {f_{\text{Gal}_{#1}}^{\prime\prime} (t)}
-\newcommand{\ftpppGal} [1] {f_{\text{Gal}_{#1}}^{\prime\prime\prime} (t)}
+\newcommand*{\ftGal} [1] {f_{\text{Gal}_{#1}} (t)}
+\newcommand*{\ftpGal} [1] {f_{\text{Gal}_{#1}}^{\prime} (t)}
+\newcommand*{\ftppGal} [1] {f_{\text{Gal}_{#1}}^{\prime\prime} (t)}
+\newcommand*{\ftpppGal} [1] {f_{\text{Gal}_{#1}}^{\prime\prime\prime} (t)}
 %for pressure translation
-\newcommand{\ftP}  {f_{P} (t)}
-\newcommand{\ftpP}  {f_{P}^{\prime} (t)}
-\newcommand{\ftppP}  {f_{P}^{\prime\prime} (t)}
+\newcommand*{\ftP}  {f_{P} (t)}
+\newcommand*{\ftPa}  {f_{\hat{P}} (t)}
+\newcommand*{\ftpP}  {f_{P}^{\prime} (t)}
+\newcommand*{\ftppP}  {f_{P}^{\prime\prime} (t)}
 % model for a term
-\newcommand{ \model } [1] {\mathcal{M}_{#1}}
+\newcommand*{ \model } [1] {\mathcal{M}_{#1}}
 
 % integration constant
-\newcommand{\intconst}[2][]{%
+\newcommand*{\intconstbase}{c}
+\newcommand*{\intconst}[2][]{%
 \MyIfEmptyTF{#1}
-  {c_{#2}}
-  {c_{{#2}_{#1}}}
+  {\intconstbase_{#2}}
+  {\intconstbase_{{#2}_{#1}}}
 }
 
 % jet stuff
-\newcommand{ \ucenterline }  {U_{s}}
+\newcommand*{ \ucenterline }  {U_{s}}
 
 % cite author's name in possesive form
-% \newcommand{ \posscite } [1] { \citeauthor }
-\newcommand{\crefrangeconjunction}{--}
+% \newcommand*{ \posscite } [1] { \citeauthor }
+\newcommand*{\crefrangeconjunction}{--}
+
+\newcommand*{\utau}{u_\tau}
+\newcommand*{\karman}{\kappa}
+% model parameters
+\newcommand*{\cmu}{C_{\mu}}
+\newcommand*{\cmuomegabase}{C_{\omega}}
+\newcommand*{\cmuomega}[1][]{
+\MyIfEmptyTF{#1}
+  {\cmuomegabase}
+  {C_{\omega, #1}}}
+\newcommand*{\cepsprod}{C_{\varepsilon,1}}
+\newcommand*{\cepsdiss}{C_{\varepsilon,2}}
+\newcommand*{\cepsdiff}{c_{\varepsilon}}
+\newcommand*{\cepshatdiff}{\hat{c}_{\varepsilon}}
+\newcommand*{\cuadiff}{\hat{c}_{R}}
+\newcommand*{\cepshatprod}{\hat{C}_{\varepsilon,1}}
+% \newcommand*{\cepshatprodinv}{\hat{C}_{\varepsilon,3}}
+\newcommand*{\cepshatprodinvratio}{\gamma}
+\newcommand*{\cepshatdiss}{\hat{C}_{\varepsilon,2}}
+\newcommand*{\sigmak}{\sigma_{k}}
+\newcommand*{\sigmaeps}{\sigma_{\varepsilon}}
+\newcommand*{\sigmaepshat}{\hat{\sigma}_{\varepsilon}}
+\newcommand*{\modmomvisc}{\iota}
+
+\newcommand*{\ckomegaprod}{\alpha^*}
+\newcommand*{\ckomegadiss}{\beta^*}
+\newcommand*{\comegaprod}{\alpha}
+\newcommand*{\comegadiss}{\beta}
+\newcommand*{\comegahatprod}{\alpha^{**}}
+% \newcommand*{\cepshatprodinv}{\hat{C}_{\varepsilon,3}}
+\newcommand*{\comegahatprodinvratio}{\gamma^*}
+\newcommand*{\comegahatdiss}{\beta^{**}}
+\newcommand*{\sigmakomega}{\sigma^*}
+\newcommand*{\sigmaomega}{\sigma}
+\newcommand*{\sigmaomegahat}{\sigma^{**}}
+% DG stuff
+\newcommand*{\jump}[1]{(#1^{\text{in}} - #1^{\text{out}})}
+\newcommand*{\avg}[1]{\frac{#1^{\text{in}} + #1^{\text{out}}}{2}}
+\newcommand*{\avgl}[1]{\frac{1}{2}\left(#1^{\text{in}} + #1^{\text{out}}\right)}
+\newcommand*{\jumptwo}[2]{(#1^{\text{in}} #2^{\text{in}} - #1^{\text{out}} #2^{\text{out}})}
+\newcommand*{\avgtwo}[2]{\frac{#1^{\text{in}} #2^{\text{in}} + #1^{\text{out}} #2^{\text{out}}}{2}}
+\newcommand*{\avgltwo}[2]{\frac{1}{2}\left(#1^{\text{in}} #2^{\text{in}} + #1^{\text{out}} #2^{\text{out}}\right)}
+
+\newcommand*{\gridsize}{h}
+\newcommand*{\source}{S}
+\newcommand*{\sourcemom}[1][i]{\source_{\text{mom},{#1}}}
+\newcommand*{\sourcemass}{\source_{\text{conti}}}
+\newcommand*{\velgradsymm}{S}
+\newcommand*{\velgradantisymm}{W}
+\newcommand*{\velgradhst}{S_{12}}
+\newcommand*{\velgradhsta}{\hat{S}_{12}}
+
+\newcommand*{\ordinal}[2][th]{#2{\text{#1}}}
+\newcommand*{\nth}{\ordinal{n}}
+\newcommand*{\ith}{\ordinal{i}}
+\newcommand*{\jth}{\ordinal{j}}
+\newcommand*{\first}{\ordinal[st]{1}}
+\newcommand*{\second}{\ordinal[nd]{2}}
+\newcommand*{\third}{\ordinal[rd]{3}}
+\newcommand*{\fourth}{\ordinal{4}}
+\newcommand*{\fifth}{\ordinal{5}}
+
+% \newcommand*{\expnumber}[2]{{#1}\mathrm{e}{#2}} % scientific notation
+\newcommand*{\expnumber}[2][]{
+  \MyIfEmptyTF{#1}
+  {10^{#2}}
+  {#1 \cdot 10^{#2}}
+} % scientific notation

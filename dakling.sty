@@ -4,8 +4,9 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{amsfonts}
-\usepackage{amsthm}
+% \usepackage{amsthm}
 \usepackage{csquotes}
+\RequirePackage{xcolor}
 % \usepackage[noabbrev,capitalise]{cleveref}
 \usepackage[capitalise]{cleveref}
 \usepackage{xifthen}
@@ -79,8 +80,8 @@
 \newcommand*{\ncm} [ 1 ] { \mean{\mathcal{N}_{#1}} }
 \newcommand*{\ncf} [ 1 ] { \mathcal{N}_{#1}' }
 % generic vector/tensor
-% \newcommand*{\vv}[1]{\mathbf{#1}}
-\newcommand*{\vv}[1]{\boldsymbol #1}
+\renewcommand*{\vv}[1]{\mathbf{#1}}
+% \renewcommand*{\vv}[1]{\boldsymbol #1}
 \newcommand*{\xv}{ \vv{x} }
 \newcommand*{\yv}{ \vv{y} }
 \newcommand*{\uv}{ \vv{u} }
@@ -98,7 +99,8 @@
     {\orderBase(#1)}
     {\orderBase({#1}^{#2}) }
 }
-\newcommand*{\code} [ 1 ] { \texttt{#1} }
+\newcommand*{\code} [ 1 ] {\texttt{#1}}
+\newcommand*{\file} [ 1 ] {\texttt{#1}}
 % evaluate (eg derivative) at position
 \newcommand*{\atpos} [2] { \bigg|_{{#1} = {#2}} } % use evalfun instead!
 \newcommand*{\evalfunI} [3] {\left.\kern-\nulldelimiterspace {#1} \right|_{{#2} = {#3}}}
@@ -592,7 +594,7 @@
 \newcommand*{\ka}  { \hat{k} }
 \newcommand*{\stdra}  { \hat{\omega} }
 \newcommand*{\tdra}  { \hat{\varepsilon} }
-\newcommand*{\ualpha} [1][] {
+\renewcommand*{\ualpha} [1][] {
     \MyIfEmptyTF{#1}
         {v} 
         {v_{#1}} 
@@ -773,7 +775,8 @@
 % \newcommand*{ \posscite } [1] { \citeauthor }
 \newcommand*{\crefrangeconjunction}{--}
 
-\newcommand*{\utau}{u_\tau}
+\renewcommand*{\utau}{u_\tau}
+\newcommand*{\retau}{\text{Re}_\tau}
 \newcommand*{\karman}{\kappa}
 % model parameters
 \newcommand*{\cmu}{C_{\mu}}
@@ -840,3 +843,29 @@
   {10^{#2}}
   {#1 \cdot 10^{#2}}
 } % scientific notation
+
+\DeclareMathOperator{\sgn}{sgn}
+
+\newcommand*{\cahn}{\text{Cn}}
+\newcommand*{\deformpar}{D_{\text{def}}}
+
+\newcommand*{\fortran}{FORTRAN}
+\newcommand*{\clang}{C}
+\newcommand*{\cpp}{C++}
+\newcommand*{\csharp}{C\#}
+\newcommand*{\dotnet}{.NET}
+\newcommand*{\dotnetfive}{.NET5}
+
+% \newcommand*{\test}{v}
+
+\newcommand*{\comment}[1]{\textcolor{blue}{#1}}
+
+
+\newcommand*{\utot}[1][]{\vv{U_{#1}}}
+\newcommand*{\ptot}{P}
+\newcommand*{\upert}[1][]{\vv{\tilde{u}_{#1}}}
+\newcommand*{\ppert}{\tilde{p}}
+\newcommand*{\ubase}[1][]{\bar{\vv{U}_{#1}}}
+\newcommand*{\ubaseargs}[1]{\bar{\vv{U}}({#1})}
+\newcommand*{\pbase}[1][]{\bar{P_{#1}}}
+\newcommand*{\pbaseargs}[1]{\bar{P}({#1})}

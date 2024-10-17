@@ -85,6 +85,7 @@
 \newcommand*{\mcf}{ \tilde{\mathcal{M}} }
 
 % generic vector/tensor
+\providecommand*{\vv}[1]{\mathbf{#1}}
 \renewcommand*{\vv}[1]{\mathbf{#1}}
 % \renewcommand*{\vv}[1]{\boldsymbol #1}
 \newcommand*{\xv}{ \vv{x} }
@@ -95,6 +96,7 @@
 \newcommand*{\te}[1]{ \boldsymbol #1 }
 \newcommand*{\xt}{ \te{x} }
 \newcommand*{\yt}{ \te{y} }
+\newcommand*{\transpose}[1]{ {#1}^{\intercal} }
 % absolute value
 \newcommand*{\abs}[1]{\left| #1 \right|}
 % "order of" symbol
@@ -170,6 +172,10 @@
 \newcommand*{\mdi} [2] { \diffInline{#1}{#2}{D} }
 \newcommand*{\tdi} [2] { \diffInline{#1}{#2}{\mathcal{D}} }
 \newcommand*{\mdai} [2] { \diffInline{#1}{#2}{\hat{D}} }
+\newcommand*{\vdi} [2] { \diffInline{#1}{#2}{\delta} }
+
+%variational derivative
+\newcommand*{\vd} [3][] { \diffGeneric[#1]{#2}{#3}{\delta} }
 % jet derivative
 % \newcommand*{\jd} [2] { \underset{#2}{#1} }
 % \newcommand*{\jd} [2] { {#1}_{{\!,{#2}}} }
@@ -846,7 +852,7 @@
 \newcommand*{\expnumber}[2][]{
   \MyIfEmptyTF{#1}
   {10^{#2}}
-  {#1 \cdot 10^{#2}}
+  {{#1} \cdot 10^{#2}}
 } % scientific notation
 
 \DeclareMathOperator{\sgn}{sgn}
@@ -883,3 +889,5 @@
 \newcommand*{\lagrangian}{\mathcal{L}}
 \newcommand*{\volint}[1]{\iiint{#1}dV}
 \newcommand*{\timeint}[1]{\int_0^T{#1}dt}
+
+\newcommand\posscite[1]{\citeauthor{#1}'s (\citeyear{#1})}

@@ -61,6 +61,8 @@
 % \catcode`\^ = 13 \def^#1{\sp{#1}{}}
 % \catcode`\_ = 13 \def_#1{\sb{#1}{}}
 
+\newcommand\posscite[1]{\citeauthor{#1}'s (\citeyear{#1})}
+
 % use with align*-environment
 \newcommand*\donumber{\addtocounter{equation}{1}\tag{\theequation}}
 %% low-level macros
@@ -605,7 +607,8 @@
 \newcommand*{\ka}  { \hat{k} }
 \newcommand*{\stdra}  { \hat{\omega} }
 \newcommand*{\tdra}  { \hat{\varepsilon} }
-\newcommand*{\ualpha} [1][] {
+\providecommand*{\ualpha}{}
+\renewcommand*{\ualpha} [1][] {
     \MyIfEmptyTF{#1}
         {v} 
         {v_{#1}} 
@@ -786,7 +789,8 @@
 % \newcommand*{ \posscite } [1] { \citeauthor }
 \newcommand*{\crefrangeconjunction}{--}
 
-\newcommand*{\utau}{u_\tau}
+\providecommand*{\utau}{u_\tau}
+\renewcommand*{\utau}{u_\tau}
 \newcommand*{\retau}{\text{Re}_\tau}
 \newcommand*{\karman}{\kappa}
 % model parameters
@@ -890,4 +894,20 @@
 \newcommand*{\volint}[1]{\iiint\limits_V{#1}dV}
 \newcommand*{\timeint}[1]{\int_0^T{#1}dt}
 
-\newcommand\posscite[1]{\citeauthor{#1}'s (\citeyear{#1})}
+
+\newcommand*{\energy}[1][]{
+  \MyIfEmptyTF{#1}
+  {\mathcal{E}}
+  {\mathcal{E}\left({ #1 }\right)}
+}
+\newcommand*{\flux}[1][]{
+  \MyIfEmptyTF{#1}
+  {\dot{\mathcal{E}}}
+  {\dot{\mathcal{E}}\left({ #1 }\right)}
+}
+\newcommand*{\dissflux}[1][]{
+  \MyIfEmptyTF{#1}
+  {\dot{\mathcal{E}}_{\text{diss}}}
+  {\dot{\mathcal{E}}_{\text{diss}}\left({ #1 }\right)}
+}
+

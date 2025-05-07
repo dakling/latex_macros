@@ -140,7 +140,7 @@
 \newcommand*{\simvarxi}{\xi}
 \newcommand*{\simvar} [1] {\widetilde{#1}}
 % averaging
-\newcommand*{\avgerage} [2] {\langle{#1}\rangle_{#2}}
+\newcommand*{\avg} [2] {\langle{#1}\rangle_{#2}}
 \ExplSyntaxOn
 \newcommand*{\mean} [1] {
     \tl_set:Nn \l_tmpa_tl { #1 } % store argument in variable \l_tmpa_tl
@@ -829,12 +829,12 @@
 \newcommand*{\sigmaomega}{\sigma}
 \newcommand*{\sigmaomegahat}{\sigma^{**}}
 % DG stuff
-\newcommand*{\jump}[1]{(#1^{\text{in}} - #1^{\text{out}})}
-\newcommand*{\avg}[1]{\frac{#1^{\text{in}} + #1^{\text{out}}}{2}}
-\newcommand*{\avgl}[1]{\frac{1}{2}\left(#1^{\text{in}} + #1^{\text{out}}\right)}
-\newcommand*{\jumptwo}[2]{(#1^{\text{in}} #2^{\text{in}} - #1^{\text{out}} #2^{\text{out}})}
-\newcommand*{\avgtwo}[2]{\frac{#1^{\text{in}} #2^{\text{in}} + #1^{\text{out}} #2^{\text{out}}}{2}}
-\newcommand*{\avgltwo}[2]{\frac{1}{2}\left(#1^{\text{in}} #2^{\text{in}} + #1^{\text{out}} #2^{\text{out}}\right)}
+\newcommand*{\dgjump}[1]{(#1^{\text{in}} - #1^{\text{out}})}
+\newcommand*{\dgavg}[1]{\frac{#1^{\text{in}} + #1^{\text{out}}}{2}}
+\newcommand*{\dgavgl}[1]{\frac{1}{2}\left(#1^{\text{in}} + #1^{\text{out}}\right)}
+\newcommand*{\dgjumptwo}[2]{(#1^{\text{in}} #2^{\text{in}} - #1^{\text{out}} #2^{\text{out}})}
+\newcommand*{\dgavgtwo}[2]{\frac{#1^{\text{in}} #2^{\text{in}} + #1^{\text{out}} #2^{\text{out}}}{2}}
+\newcommand*{\dgavgltwo}[2]{\frac{1}{2}\left(#1^{\text{in}} #2^{\text{in}} + #1^{\text{out}} #2^{\text{out}}\right)}
 
 \newcommand*{\gridsize}{h}
 \newcommand*{\source}{S}

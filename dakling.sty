@@ -160,6 +160,17 @@
             {{\cfrac{#4^{#1} #2}{#4 #3 ^{#1}}}} % higher derivatives, Einstein notation won't make sense in general
         }
 }
+\newcommand*{\diffInline}[4][]{
+    \MyIfEmptyTF{#1}
+        { {#4 #2}/{#4 #3} }
+        { \int_compare:nTF{ #1=2 } % second derivatives in Einstein notation
+            {\iftoggle{EinsteinNotationDiff} % check if option is enabled
+                {{#4^{#1} #2}/{#4 #3 #4 #3} }
+                {{#4^{#1} #2}/{#4 #3^{#1}} }
+            }
+            {{{#4^{#1} #2}/{#4 #3 ^{#1}}}} % higher derivatives, Einstein notation won't make sense in general
+        }
+}
 \ExplSyntaxOff
 % total derivative
 \newcommand*{\dd} [3][] { \diffGeneric[#1]{#2}{#3}{d} }
@@ -172,17 +183,6 @@
 \newcommand*{\td} [3][] { \diffGeneric[#1]{#2}{#3}{\mathcal{D}} }
 % derivatives without frac
 % \newcommand*{\diffInline} [3][] { {#3 #1}/{#3 #2} }
-\newcommand*{\diffInline}[4][]{
-    \MyIfEmptyTF{#1}
-        { {#4 #2}/{#4 #3} }
-        { \int_compare:nTF{ #1=2 } % second derivatives in Einstein notation
-            {\iftoggle{EinsteinNotationDiff} % check if option is enabled
-                {{#4^{#1} #2}/{#4 #3 #4 #3} }
-                {{#4^{#1} #2}/{#4 #3^{#1}} }
-            }
-            {{{#4^{#1} #2}/{#4 #3 ^{#1}}}} % higher derivatives, Einstein notation won't make sense in general
-        }
-}
 \newcommand*{\did} [3][] { \diffInline[#1]{#2}{#3}{d} }
 \newcommand*{\pdi} [3][] { \diffInline[#1]{#2}{#3}{\partial} }
 \newcommand*{\mdi} [3][] { \diffInline[#1]{#2}{#3}{D} }

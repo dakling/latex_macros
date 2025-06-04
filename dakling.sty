@@ -177,10 +177,10 @@
         { {#4 #2}/{#4 #3} }
         { \int_compare:nTF{ #1=2 } % second derivatives in Einstein notation
             {\iftoggle{EinsteinNotationDiff} % check if option is enabled
-                {{#4^{#1} #2}/{#4 #3 #4 #3} }
-                {{#4^{#1} #2}/{#4 #3^{#1}} }
+                {{#4^{#1} #2}/{(#4 #3 #4 #3)} }
+                {{#4^{#1} #2}/{(#4 #3^{#1})} }
             }
-            {{{#4^{#1} #2}/{#4 #3 ^{#1}}}} % higher derivatives, Einstein notation won't make sense in general
+            {{{#4^{#1} #2}/{(#4 #3 ^{#1})}}} % higher derivatives, Einstein notation won't make sense in general
         }
 }
 \newcommand*{\did} [3][] { \diffInline[#1]{#2}{#3}{d} }
